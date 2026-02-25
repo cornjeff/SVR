@@ -164,10 +164,10 @@
     inset: 0;
     background:
       linear-gradient(to bottom,
-        rgba(8,18,30,0.45) 0%,
-        rgba(8,18,30,0.30) 35%,
-        rgba(8,18,30,0.55) 70%,
-        rgba(8,18,30,0.82) 100%
+        rgba(8,18,30,0.20) 0%,
+        rgba(8,18,30,0.10) 30%,
+        rgba(8,18,30,0.38) 65%,
+        rgba(8,18,30,0.72) 100%
       );
   }
 
@@ -184,7 +184,7 @@
   .hero-content {
     position: relative;
     text-align: center;
-    padding: 2rem;
+    padding: 2.5rem 3rem 3rem;
     animation: heroFadeIn 1.4s ease both;
   }
 
@@ -199,9 +199,10 @@
     font-weight: 400;
     letter-spacing: 0.35em;
     text-transform: uppercase;
-    color: var(--gold-light);
+    color: #ffffff;
     margin-bottom: 1.5rem;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+    font-weight: 500;
+    text-shadow: 0 1px 12px rgba(0,0,0,1), 0 0 30px rgba(0,0,0,1);
   }
 
   .hero-logo-large {
@@ -218,7 +219,7 @@
     letter-spacing: 0.06em;
     line-height: 1.1;
     margin-bottom: 0.8rem;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 24px rgba(0,0,0,0.9), 0 1px 6px rgba(0,0,0,1), 0 0 40px rgba(0,0,0,0.5);
   }
 
   .hero-title span { color: var(--gold); }
@@ -231,7 +232,7 @@
     color: rgba(255,255,255,0.82);
     margin-bottom: 3rem;
     letter-spacing: 0.04em;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.7);
+    text-shadow: 0 1px 10px rgba(0,0,0,1), 0 0 24px rgba(0,0,0,0.8);
   }
 
   .hero-divider {
@@ -247,21 +248,23 @@
     gap: 10px;
     font-family: 'Raleway', sans-serif;
     font-size: 0.68rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--gold);
-    border: 1px solid var(--gold-dim);
-    padding: 14px 32px;
+    color: var(--navy);
+    border: none;
+    padding: 16px 36px;
     cursor: pointer;
     text-decoration: none;
     transition: all 0.3s;
-    background: transparent;
+    background: var(--gold);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   }
 
   .hero-cta:hover {
-    background: rgba(201,168,76,0.1);
-    border-color: var(--gold);
+    background: var(--gold-light);
+    box-shadow: 0 6px 32px rgba(0,0,0,0.6);
+    transform: translateY(-1px);
   }
 
   /* ─── ANNOUNCEMENT BANNER ─── */
@@ -1010,7 +1013,7 @@
     <li><a href="#" onclick="showPage('amenities')" id="nav-amenities">Amenities</a></li>
     <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a></li>
   </ul>
-  <button class="nav-member-btn" onclick="showLogin()">Members Login</button>
+  <button class="nav-member-btn" onclick="showLogin()">Homeowner Login</button>
 </nav>
 
 <!-- ═══════════════════════ LOGIN OVERLAY ═══════════════════════ -->
@@ -1022,9 +1025,9 @@
         <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
       </svg>
     </div>
-    <div class="login-title">Members Portal</div>
+    <div class="login-title">Homeowners Portal</div>
     <div class="login-subtitle">Spruce Valley Ranch Homeowners</div>
-    <input type="password" class="login-input" id="loginPassword" placeholder="Enter member password" onkeydown="if(event.key==='Enter')doLogin()">
+    <input type="password" class="login-input" id="loginPassword" placeholder="Enter homeowner password" onkeydown="if(event.key==='Enter')doLogin()">
     <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
     <button class="login-btn" onclick="doLogin()">Enter Portal</button>
     <button class="login-close" onclick="hideLogin()">Cancel</button>
@@ -1167,9 +1170,9 @@
           <div class="contact-block mt2">
             <h3>Member Access</h3>
             <p style="font-size:0.83rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
-              HOA documents, the community directory, newsletters, and financial records are available to homeowners through the Members Portal. Contact the HOA administrator to receive your login credentials.
+              HOA documents, the community directory, newsletters, and financial records are available to homeowners through the Homeowners Portal. Contact the HOA administrator to receive your login credentials.
             </p>
-            <button class="hero-cta" onclick="showLogin()" style="font-size:0.65rem;">Access Members Portal</button>
+            <button class="hero-cta" onclick="showLogin()" style="font-size:0.65rem;">Access Homeowners Portal</button>
           </div>
         </div>
         <div>
@@ -1202,7 +1205,7 @@
 <!-- ═══════════════════════ PAGE: MEMBERS PORTAL ═══════════════════════ -->
 <div class="page" id="page-members">
   <div class="portal-header">
-    <div class="portal-title">Members Portal — Spruce Valley Ranch</div>
+    <div class="portal-title">Homeowners Portal — Spruce Valley Ranch</div>
     <button class="portal-logout" onclick="doLogout()">Sign Out</button>
   </div>
   <div class="portal-tabs">
@@ -1380,7 +1383,7 @@
 
     <!-- CHANGE MEMBER PASSWORD -->
     <div class="cms-section">
-      <div class="cms-section-title">Member Portal Password</div>
+      <div class="cms-section-title">Homeowner Portal Password</div>
       <div class="cms-row">
         <div class="cms-field">
           <label class="cms-label">New Password</label>
@@ -1391,7 +1394,7 @@
           <input type="password" class="cms-input" id="confirmPassword" placeholder="Confirm new password">
         </div>
       </div>
-      <button class="cms-btn cms-btn-secondary" onclick="changePassword()">Update Member Password</button>
+      <button class="cms-btn cms-btn-secondary" onclick="changePassword()">Update Homeowner Password</button>
       <div id="passwordMsg" style="font-size:0.75rem; margin-top:0.5rem; display:none;"></div>
     </div>
 
@@ -1433,7 +1436,7 @@ const DEFAULT_DATA = {
   password: 'SVR2024',
   adminPassword: 'SVRAdmin2024',
   adminEmail: 'SVRboard@gmail.com',
-  sheetsUrl: '',  // Paste your Google Apps Script deployment URL here via the CMS
+  sheetsUrl: 'https://script.google.com/macros/s/AKfycbwKXA-h8tg1_c-tIVv3NqrHqFGL4nSzvjX8LxTfvtKNz1QOlBi2YYhE-vZFFyx5PcllcA/exec',
   announcements: [
     { id: 1, date: 'Spring 2025', text: 'Annual HOA meeting scheduled for June 14th at the picnic area. All homeowners encouraged to attend.' },
     { id: 2, date: 'April 2025', text: 'Trail grooming for cross-country skiing has concluded for the season. Summer trails are now open.' }
@@ -1448,10 +1451,11 @@ const DEFAULT_DATA = {
     { id: 7, name: 'XC Ski Trails', desc: 'Groomed cross-country ski and snowshoe trails through the ranch and into the National Forest each winter season.' }
   ],
   board: [
-    { id: 1, name: 'Board Member', role: 'President' },
-    { id: 2, name: 'Board Member', role: 'Vice President' },
-    { id: 3, name: 'Board Member', role: 'Treasurer' },
-    { id: 4, name: 'Board Member', role: 'Secretary' }
+    { id: 1, name: 'Paul Pittman', role: 'President' },
+    { id: 2, name: 'Mike Wall', role: 'Vice President' },
+    { id: 3, name: 'Jeff Corn', role: 'Treasurer' },
+    { id: 4, name: 'Mike Buckley', role: 'Secretary' },
+    { id: 5, name: 'Bill Miller', role: 'Director' }
   ],
   directory: [
     { id: 1, name: 'Sample Homeowner', lot: 'Lot 1 — 100 Spruce Valley Dr', phone: '(970) 555-0100', email: 'homeowner@example.com' }
@@ -1782,26 +1786,29 @@ function renderCMS() {
     </div>
   `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No announcements.</div>';
 
-  // Amenities
+  // Amenities — inline editable
   document.getElementById('cms-amenities-list').innerHTML = siteData.amenities.map(a => `
-    <div class="cms-item-row">
-      <div class="cms-item-info">
-        <div>${a.name}</div>
-        <div class="cms-item-sub">${a.desc}</div>
+    <div class="cms-item-row" id="amenity-row-${a.id}" style="align-items:flex-start;">
+      <div class="cms-item-info" style="display:flex; flex-direction:column; gap:0.5rem; flex:1;">
+        <input type="text" class="cms-input" value="${a.name}" id="amenity-name-${a.id}" placeholder="Amenity name">
+        <textarea class="cms-textarea" id="amenity-desc-${a.id}" placeholder="Description" style="min-height:60px;">${a.desc}</textarea>
       </div>
-      <div class="cms-actions">
-        <button class="cms-btn cms-btn-danger" onclick="removeAmenity(${a.id})">Remove</button>
+      <div class="cms-actions" style="flex-direction:column; align-self:flex-start; margin-top:2px;">
+        <button class="cms-btn cms-btn-secondary" onclick="saveAmenity(${a.id})">Save</button>
+        <button class="cms-btn cms-btn-danger" onclick="removeAmenity(${a.id})" style="margin-top:0.4rem;">Remove</button>
       </div>
     </div>
   `).join('');
 
-  // Board
+  // Board — inline editable
   document.getElementById('cms-board-list').innerHTML = siteData.board.map(b => `
-    <div class="cms-item-row">
-      <div class="cms-item-info">
-        <div>${b.name} <span style="color:var(--gold-dim); font-size:0.75rem; margin-left:0.5rem;">${b.role}</span></div>
+    <div class="cms-item-row" id="board-row-${b.id}">
+      <div class="cms-item-info" style="display:flex; gap:0.8rem; flex:1;">
+        <input type="text" class="cms-input" style="flex:1;" value="${b.name}" id="board-name-${b.id}" placeholder="Name">
+        <input type="text" class="cms-input" style="width:160px; flex-shrink:0;" value="${b.role}" id="board-role-${b.id}" placeholder="Role">
       </div>
       <div class="cms-actions">
+        <button class="cms-btn cms-btn-secondary" onclick="saveBoardMember(${b.id})">Save</button>
         <button class="cms-btn cms-btn-danger" onclick="removeBoardMember(${b.id})">Remove</button>
       </div>
     </div>
@@ -1823,6 +1830,19 @@ function renderCMS() {
 
 function nextId(arr) {
   return arr.length ? Math.max(...arr.map(x => x.id)) + 1 : 1;
+}
+
+function showSavedIndicator(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  const prev = row.querySelector('.inline-saved');
+  if (prev) prev.remove();
+  const tag = document.createElement('span');
+  tag.className = 'inline-saved';
+  tag.textContent = '✓ Saved';
+  tag.style.cssText = 'font-size:0.68rem; color:#80c880; margin-left:0.5rem; letter-spacing:0.08em;';
+  row.querySelector('.cms-actions').appendChild(tag);
+  setTimeout(() => tag.remove(), 2500);
 }
 
 function addAnnouncement() {
@@ -1850,6 +1870,15 @@ function addAmenity() {
   renderCMS();
 }
 
+function saveAmenity(id) {
+  const name = document.getElementById('amenity-name-' + id).value.trim();
+  const desc = document.getElementById('amenity-desc-' + id).value.trim();
+  if (!name) return alert('Please enter an amenity name.');
+  const amenity = siteData.amenities.find(a => a.id === id);
+  if (amenity) { amenity.name = name; amenity.desc = desc; }
+  showSavedIndicator('amenity-row-' + id);
+}
+
 function removeAmenity(id) {
   siteData.amenities = siteData.amenities.filter(a => a.id !== id);
   renderCMS();
@@ -1863,6 +1892,15 @@ function addBoardMember() {
   document.getElementById('newBoardName').value = '';
   document.getElementById('newBoardRole').value = '';
   renderCMS();
+}
+
+function saveBoardMember(id) {
+  const name = document.getElementById('board-name-' + id).value.trim();
+  const role = document.getElementById('board-role-' + id).value.trim();
+  if (!name || !role) return alert('Please fill in both name and role.');
+  const member = siteData.board.find(b => b.id === id);
+  if (member) { member.name = name; member.role = role; }
+  showSavedIndicator('board-row-' + id);
 }
 
 function removeBoardMember(id) {
