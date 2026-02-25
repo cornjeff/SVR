@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spruce Valley Ranch — Blue River, Colorado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #162032;
+    --navy-light: #1e2d40;
+    --navy-border: #2a3d54;
+    --gold: #c9a84c;
+    --gold-light: #e4c87a;
+    --gold-dim: #8a6f32;
+    --cream: #f5f0e8;
+    --cream-dim: #c8bfa8;
+    --white: #ffffff;
+    --text-body: #b8c4d0;
+    --text-muted: #6a7f94;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Raleway', sans-serif;
+    background: var(--navy);
+    color: var(--text-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(13, 27, 42, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 0 2rem;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .nav-logo svg { width: 54px; height: 34px; }
+
+  .nav-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .nav-title-main {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-title-sub {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+  .nav-member-btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--navy);
+    background: var(--gold);
+    border: none;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .nav-member-btn:hover { background: var(--gold-light); }
+
+  /* ─── PAGES ─── */
+  .page { display: none; padding-top: 70px; min-height: 100vh; position: relative; z-index: 1; }
+  .page.active { display: block; }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(160deg, #0d1b2a 0%, #0a1520 40%, #0f1e10 100%);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 20% 20%, rgba(201,168,76,0.04) 0%, transparent 50%);
+  }
+
+  .hero-mountain {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    opacity: 0.12;
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    padding: 2rem;
+    animation: heroFadeIn 1.4s ease both;
+  }
+
+  @keyframes heroFadeIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-logo-large {
+    margin: 0 auto 2rem;
+    width: 110px;
+    opacity: 0.9;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    margin-bottom: 0.8rem;
+  }
+
+  .hero-title span { color: var(--gold); }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-divider {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 3rem;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 14px 32px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    background: transparent;
+  }
+
+  .hero-cta:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold);
+  }
+
+  /* ─── ANNOUNCEMENT BANNER ─── */
+  .announcement-section {
+    background: var(--navy-mid);
+    border-top: 1px solid var(--navy-border);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 1.2rem 2rem;
+  }
+
+  .announcement-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .announcement-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--gold-dim);
+    padding: 4px 10px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .announcement-items { flex: 1; }
+
+  .announcement-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--navy-border);
+    font-size: 0.85rem;
+    color: var(--cream-dim);
+    line-height: 1.5;
+  }
+
+  .announcement-item:last-child { border-bottom: none; }
+
+  .announcement-date {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-right: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── SECTION COMMON ─── */
+  section { padding: 5rem 2rem; }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+  }
+
+  .section-rule {
+    width: 50px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 2rem;
+  }
+
+  .section-intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ─── AMENITIES GRID ─── */
+  .amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--navy-border);
+    border: 1px solid var(--navy-border);
+  }
+
+  .amenity-card {
+    background: var(--navy-mid);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .amenity-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+
+  .amenity-card:hover { background: var(--navy-light); }
+  .amenity-card:hover::before { transform: scaleX(1); }
+
+  .amenity-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 1.2rem;
+    color: var(--gold-dim);
+  }
+
+  .amenity-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+  }
+
+  .amenity-desc {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  /* ─── CONTACT PAGE ─── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  @media(max-width: 700px) { .contact-grid { grid-template-columns: 1fr; } }
+
+  .contact-block { }
+
+  .contact-block h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--navy-border);
+  }
+
+  .contact-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--navy-border);
+  }
+
+  .contact-item-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+  }
+
+  .contact-item-value {
+    font-size: 0.9rem;
+    color: var(--cream-dim);
+  }
+
+  .contact-item-value a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .contact-map-placeholder {
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+
+  /* ─── LOGIN OVERLAY ─── */
+  .login-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(13,27,42,0.97);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-overlay.active { display: flex; }
+
+  .login-box {
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    padding: 3.5rem 3rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: loginSlide 0.4s ease both;
+  }
+
+  @keyframes loginSlide {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-logo { margin: 0 auto 2rem; width: 70px; }
+
+  .login-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 2.5rem;
+  }
+
+  .login-input {
+    width: 100%;
+    background: var(--navy);
+    border: 1px solid var(--navy-border);
+    color: var(--cream);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    padding: 14px 16px;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    letter-spacing: 0.1em;
+  }
+
+  .login-input:focus { border-color: var(--gold-dim); }
+
+  .login-btn {
+    width: 100%;
+    background: var(--gold);
+    border: none;
+    color: var(--navy);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 1rem;
+  }
+
+  .login-btn:hover { background: var(--gold-light); }
+
+  .login-error {
+    font-size: 0.75rem;
+    color: #e07070;
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  .login-close {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-family: 'Raleway', sans-serif;
+  }
+
+  /* ─── MEMBERS PORTAL ─── */
+  .portal-header {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .portal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--cream);
+    letter-spacing: 0.1em;
+  }
+
+  .portal-logout {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--navy-border);
+    padding: 7px 16px;
+    font-family: 'Raleway', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .portal-logout:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+  .portal-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--navy-border);
+    padding: 0 2rem;
+    overflow-x: auto;
+  }
+
+  .portal-tab {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    transition: all 0.2s;
+  }
+
+  .portal-tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .portal-tab:hover { color: var(--cream-dim); }
+
+  .portal-content { padding: 2.5rem 2rem; max-width: 1000px; }
+
+  .portal-panel { display: none; }
+  .portal-panel.active { display: block; }
+
+  /* ─── DOCUMENT LIST ─── */
+  .doc-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin: 2rem 0 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--navy-border);
+  }
+
+  .doc-section-title:first-child { margin-top: 0; }
+
+  .doc-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    margin-bottom: 0.5rem;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+
+  .doc-item:hover { background: var(--navy-light); }
+
+  .doc-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--gold-dim);
+    flex-shrink: 0;
+  }
+
+  .doc-info { flex: 1; }
+
+  .doc-name {
+    font-size: 0.88rem;
+    color: var(--cream-dim);
+    margin-bottom: 0.2rem;
+  }
+
+  .doc-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .doc-download {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  /* ─── DIRECTORY ─── */
+  .directory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .directory-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    padding: 1.5rem;
+    transition: background 0.2s;
+  }
+
+  .directory-card:hover { background: var(--navy-light); }
+
+  .directory-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--cream);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.8rem;
+  }
+
+  .directory-detail {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .directory-detail span:first-child {
+    color: var(--gold-dim);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    min-width: 50px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  /* ─── CMS ─── */
+  .cms-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(5,12,20,0.98);
+    backdrop-filter: blur(8px);
+    overflow-y: auto;
+  }
+
+  .cms-overlay.active { display: block; }
+
+  .cms-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  .cms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0 2rem;
+    border-bottom: 1px solid var(--navy-border);
+    margin-bottom: 2rem;
+  }
+
+  .cms-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .cms-close-btn {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--navy-border);
+    padding: 8px 18px;
+    font-family: 'Raleway', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .cms-close-btn:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+  .cms-section {
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cms-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--cream);
+    letter-spacing: 0.12em;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--navy-border);
+  }
+
+  .cms-field { margin-bottom: 1.2rem; }
+
+  .cms-label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+
+  .cms-input, .cms-textarea, .cms-select {
+    width: 100%;
+    background: var(--navy);
+    border: 1px solid var(--navy-border);
+    color: var(--cream);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .cms-input:focus, .cms-textarea:focus, .cms-select:focus { border-color: var(--gold-dim); }
+
+  .cms-textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
+
+  .cms-select option { background: var(--navy); }
+
+  .cms-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .cms-btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .cms-btn-primary { background: var(--gold); color: var(--navy); }
+  .cms-btn-primary:hover { background: var(--gold-light); }
+
+  .cms-btn-secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--navy-border); }
+  .cms-btn-secondary:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+  .cms-btn-danger { background: transparent; color: #e07070; border: 1px solid #5a2020; }
+  .cms-btn-danger:hover { background: rgba(224,112,112,0.1); }
+
+  .cms-item-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    background: var(--navy);
+    border: 1px solid var(--navy-border);
+    margin-bottom: 0.5rem;
+  }
+
+  .cms-item-info { flex: 1; font-size: 0.85rem; color: var(--cream-dim); }
+  .cms-item-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+  .cms-actions { display: flex; gap: 0.5rem; }
+
+  .cms-save-bar {
+    position: sticky;
+    bottom: 0;
+    background: rgba(13,27,42,0.98);
+    border-top: 1px solid var(--gold-dim);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    align-items: center;
+    margin: 0 -2rem;
+  }
+
+  .cms-save-msg {
+    font-size: 0.75rem;
+    color: #80c880;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .cms-save-msg.visible { opacity: 1; }
+
+  /* ─── ADMIN LOGIN OVERLAY ─── */
+  .admin-login-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    background: rgba(5,12,20,0.98);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admin-login-overlay.active { display: flex; }
+
+  .admin-login-box {
+    background: var(--navy-mid);
+    border: 1px solid var(--gold-dim);
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    animation: loginSlide 0.35s ease both;
+  }
+
+  .admin-login-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.6rem;
+  }
+
+  .admin-login-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--cream);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--navy-mid);
+    border-top: 1px solid var(--navy-border);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-logo { margin: 0 auto 1.2rem; width: 50px; opacity: 0.5; }
+
+  .footer-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-sub {
+    font-size: 0.68rem;
+    color: var(--navy-border);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-cms-link {
+    margin-top: 1.5rem;
+    font-size: 0.62rem;
+    color: var(--navy-border);
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    background: none;
+    border: none;
+    font-family: 'Raleway', sans-serif;
+    transition: color 0.2s;
+  }
+
+  .footer-cms-link:hover { color: var(--text-muted); }
+
+  /* ─── UTIL ─── */
+  .gold { color: var(--gold); }
+  .flex-gap { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .mt1 { margin-top: 1rem; }
+  .mt2 { margin-top: 2rem; }
+
+  @media(max-width:600px) {
+    .nav-links { display: none; }
+    .cms-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav>
+  <a class="nav-brand" onclick="showPage('home')">
+    <div class="nav-logo">
+      <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2.5"/>
+        <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
+      </svg>
+    </div>
+    <div class="nav-title">
+      <span class="nav-title-main">Spruce Valley Ranch</span>
+      <span class="nav-title-sub">Blue River, Colorado</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a href="#" onclick="showPage('amenities')" id="nav-amenities">Amenities</a></li>
+    <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+  </ul>
+  <button class="nav-member-btn" onclick="showLogin()">Members Login</button>
+</nav>
+
+<!-- ═══════════════════════ LOGIN OVERLAY ═══════════════════════ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2.5"/>
+        <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
+      </svg>
+    </div>
+    <div class="login-title">Members Portal</div>
+    <div class="login-subtitle">Spruce Valley Ranch Homeowners</div>
+    <input type="password" class="login-input" id="loginPassword" placeholder="Enter member password" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+    <button class="login-btn" onclick="doLogin()">Enter Portal</button>
+    <button class="login-close" onclick="hideLogin()">Cancel</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE: HOME ═══════════════════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <svg class="hero-mountain" viewBox="0 0 1440 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,300 L0,200 L120,120 L240,180 L360,80 L480,150 L600,40 L720,100 L840,50 L960,130 L1080,60 L1200,140 L1320,90 L1440,160 L1440,300 Z" fill="#c9a84c"/>
+    </svg>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Indiana Creek Valley · Summit County</div>
+      <div class="hero-logo-large">
+        <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2"/>
+          <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
+        </svg>
+      </div>
+      <h1 class="hero-title">Spruce Valley <span>Ranch</span></h1>
+      <p class="hero-sub">A private mountain enclave, Blue River, Colorado</p>
+      <div class="hero-divider"></div>
+      <a class="hero-cta" onclick="showPage('amenities')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Explore the Ranch
+      </a>
+    </div>
+  </div>
+
+  <!-- ANNOUNCEMENTS -->
+  <div class="announcement-section" id="announcementSection">
+    <div class="announcement-inner">
+      <div class="announcement-label">News</div>
+      <div class="announcement-items" id="announcementList">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT STRIP -->
+  <section style="background: var(--navy-mid); border-bottom: 1px solid var(--navy-border);">
+    <div class="section-inner" style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;">
+      <div>
+        <div class="section-label">Established 1977</div>
+        <h2 class="section-title">A Premier Colorado Mountain Community</h2>
+        <div class="section-rule"></div>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:300; line-height:1.8; color:var(--text-muted); font-style:italic;">
+          Set on 250 acres of pristine mountain environment adjacent to Goose Pasture Tarn, Spruce Valley Ranch is the premiere private residential community in Summit County — just minutes from Breckenridge with views of the Ten Mile Range.
+        </p>
+        <p style="font-size:0.83rem; line-height:1.7; color:var(--text-muted); margin-top:1.2rem;">
+          Comprised of 48 custom lots ranging from 2 to 5.7 acres, SVR offers unmatched exclusivity alongside a remarkable collection of private amenities for homeowners and their guests.
+        </p>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--navy-border);">
+        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
+          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">48</div>
+          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Private Lots</div>
+        </div>
+        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
+          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">250+</div>
+          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Acres</div>
+        </div>
+        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
+          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">1977</div>
+          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Established</div>
+        </div>
+        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
+          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">2 mi</div>
+          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">From Breck</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">
+      <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2"/>
+        <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
+      </svg>
+    </div>
+    <div class="footer-name">Spruce Valley Ranch HOA</div>
+    <div class="footer-sub">Blue River, Colorado · Indiana Creek Valley</div>
+    <button class="footer-cms-link" onclick="showCMS()">⚙ Site Admin</button>
+  </footer>
+</div>
+
+<!-- ═══════════════════════ PAGE: AMENITIES ═══════════════════════ -->
+<div class="page" id="page-amenities">
+  <section>
+    <div class="section-inner">
+      <div class="section-label">Community Amenities</div>
+      <h2 class="section-title">Life at Spruce Valley Ranch</h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">Exclusive amenities for SVR homeowners and their guests — all within the private boundaries of the ranch.</p>
+      <div class="amenities-grid" id="amenitiesGrid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-name">Spruce Valley Ranch HOA</div>
+    <div class="footer-sub">Blue River, Colorado · Indiana Creek Valley</div>
+    <button class="footer-cms-link" onclick="showCMS()">⚙ Site Admin</button>
+  </footer>
+</div>
+
+<!-- ═══════════════════════ PAGE: CONTACT ═══════════════════════ -->
+<div class="page" id="page-contact">
+  <section>
+    <div class="section-inner">
+      <div class="section-label">Contact & Board</div>
+      <h2 class="section-title">Get in Touch</h2>
+      <div class="section-rule"></div>
+      <div class="contact-grid">
+        <div>
+          <div class="contact-block">
+            <h3>HOA Administration</h3>
+            <div class="contact-item">
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-value"><a id="contactEmail" href="mailto:SVRboard@gmail.com">SVRboard@gmail.com</a></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-label">Community</div>
+              <div class="contact-item-value">Spruce Valley Ranch HOA</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-label">Location</div>
+              <div class="contact-item-value">Blue River, Colorado 80424<br><span style="font-size:0.78rem; color:var(--text-muted);">Off Wagon Road, south of Breckenridge</span></div>
+            </div>
+          </div>
+          <div class="contact-block mt2">
+            <h3>Board of Directors</h3>
+            <div id="boardList">
+              <!-- populated by JS -->
+            </div>
+          </div>
+          <div class="contact-block mt2">
+            <h3>Member Access</h3>
+            <p style="font-size:0.83rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
+              HOA documents, the community directory, newsletters, and financial records are available to homeowners through the Members Portal. Contact the HOA administrator to receive your login credentials.
+            </p>
+            <button class="hero-cta" onclick="showLogin()" style="font-size:0.65rem;">Access Members Portal</button>
+          </div>
+        </div>
+        <div>
+          <div class="contact-map-placeholder" style="margin-bottom:1.5rem;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" style="margin:0 auto 1rem; display:block;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <p style="color:var(--text-muted); font-size:0.82rem;">Spruce Valley Ranch<br>Blue River, CO 80424</p>
+            <p style="margin-top:0.8rem; font-size:0.72rem; color:var(--navy-border);">From Hwy 9 south of Breckenridge,<br>turn left on Wagon Road</p>
+          </div>
+          <div style="background:var(--navy-mid); border:1px solid var(--navy-border); padding:2rem;">
+            <h3 style="font-family:'Cinzel',serif; font-size:0.85rem; color:var(--cream); letter-spacing:0.1em; margin-bottom:1rem;">Community Resources</h3>
+            <div style="display:flex; flex-direction:column; gap:0.5rem;">
+              <a href="https://townofblueriver.colorado.gov" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Town of Blue River →</a>
+              <a href="https://www.breckenridge.com" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Town of Breckenridge →</a>
+              <a href="https://www.summitcountyco.gov" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Summit County Government →</a>
+              <a href="https://www.rbfire.org" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Red, White & Blue Fire District →</a>
+              <a href="https://www.summitdaily.com" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Summit Daily News →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-name">Spruce Valley Ranch HOA</div>
+    <div class="footer-sub">Blue River, Colorado · Indiana Creek Valley</div>
+    <button class="footer-cms-link" onclick="showCMS()">⚙ Site Admin</button>
+  </footer>
+</div>
+
+<!-- ═══════════════════════ PAGE: MEMBERS PORTAL ═══════════════════════ -->
+<div class="page" id="page-members">
+  <div class="portal-header">
+    <div class="portal-title">Members Portal — Spruce Valley Ranch</div>
+    <button class="portal-logout" onclick="doLogout()">Sign Out</button>
+  </div>
+  <div class="portal-tabs">
+    <button class="portal-tab active" onclick="showPortalTab('docs')">HOA Documents</button>
+    <button class="portal-tab" onclick="showPortalTab('directory')">Community Directory</button>
+    <button class="portal-tab" onclick="showPortalTab('newsletters')">Newsletters</button>
+    <button class="portal-tab" onclick="showPortalTab('financials')">Minutes & Financials</button>
+  </div>
+  <div class="portal-content">
+
+    <!-- DOCUMENTS -->
+    <div class="portal-panel active" id="panel-docs">
+      <div id="docsList"><!-- populated by JS --></div>
+    </div>
+
+    <!-- DIRECTORY -->
+    <div class="portal-panel" id="panel-directory">
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1.5rem; font-style:italic;">
+        Community directory is for the private use of SVR homeowners only. Please do not share this information outside the community.
+      </p>
+      <div class="directory-grid" id="directoryGrid"><!-- populated by JS --></div>
+    </div>
+
+    <!-- NEWSLETTERS -->
+    <div class="portal-panel" id="panel-newsletters">
+      <div id="newslettersList"><!-- populated by JS --></div>
+    </div>
+
+    <!-- FINANCIALS -->
+    <div class="portal-panel" id="panel-financials">
+      <div id="financialsList"><!-- populated by JS --></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ ADMIN LOGIN OVERLAY ═══════════════════════ -->
+<div class="admin-login-overlay" id="adminLoginOverlay">
+  <div class="admin-login-box">
+    <div class="admin-login-eyebrow">Restricted Access</div>
+    <div class="admin-login-title">Site Administration</div>
+    <input type="password" class="login-input" id="adminLoginPassword" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <div class="login-error" id="adminLoginError">Incorrect admin password.</div>
+    <button class="login-btn" onclick="doAdminLogin()" style="margin-top:0.5rem;">Enter Admin</button>
+    <button class="login-close" onclick="closeAdminLogin()">Cancel</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CMS OVERLAY ═══════════════════════ -->
+<div class="cms-overlay" id="cmsOverlay">
+  <div class="cms-container">
+    <div class="cms-header">
+      <div class="cms-title">⚙ Site Administration — Spruce Valley Ranch</div>
+      <button class="cms-close-btn" onclick="closeCMS()">Close CMS</button>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div class="cms-section">
+      <div class="cms-section-title">Homepage Announcements</div>
+      <div id="cms-announcements-list" style="margin-bottom:1rem;"></div>
+      <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
+        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Announcement</div>
+        <div class="cms-row">
+          <div class="cms-field">
+            <label class="cms-label">Date</label>
+            <input type="text" class="cms-input" id="newAnnDate" placeholder="e.g. June 1, 2025">
+          </div>
+          <div class="cms-field" style="grid-column:span 1;">
+            <label class="cms-label">Message</label>
+            <input type="text" class="cms-input" id="newAnnText" placeholder="Announcement text...">
+          </div>
+        </div>
+        <button class="cms-btn cms-btn-primary" onclick="addAnnouncement()">Add Announcement</button>
+      </div>
+    </div>
+
+    <!-- AMENITIES -->
+    <div class="cms-section">
+      <div class="cms-section-title">Amenities</div>
+      <div id="cms-amenities-list" style="margin-bottom:1rem;"></div>
+      <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
+        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Amenity</div>
+        <div class="cms-row">
+          <div class="cms-field">
+            <label class="cms-label">Name</label>
+            <input type="text" class="cms-input" id="newAmenityName" placeholder="Amenity name">
+          </div>
+          <div class="cms-field">
+            <label class="cms-label">Description</label>
+            <input type="text" class="cms-input" id="newAmenityDesc" placeholder="Brief description">
+          </div>
+        </div>
+        <button class="cms-btn cms-btn-primary" onclick="addAmenity()">Add Amenity</button>
+      </div>
+    </div>
+
+    <!-- BOARD -->
+    <div class="cms-section">
+      <div class="cms-section-title">Board Members & Contact</div>
+      <div class="cms-field">
+        <label class="cms-label">HOA Admin Email</label>
+        <input type="email" class="cms-input" id="cmsAdminEmail" placeholder="admin@example.com">
+      </div>
+      <div id="cms-board-list" style="margin-bottom:1rem;"></div>
+      <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
+        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Board Member</div>
+        <div class="cms-row">
+          <div class="cms-field">
+            <label class="cms-label">Name</label>
+            <input type="text" class="cms-input" id="newBoardName" placeholder="Full name">
+          </div>
+          <div class="cms-field">
+            <label class="cms-label">Role</label>
+            <input type="text" class="cms-input" id="newBoardRole" placeholder="e.g. President">
+          </div>
+        </div>
+        <button class="cms-btn cms-btn-primary" onclick="addBoardMember()">Add Board Member</button>
+      </div>
+    </div>
+
+    <!-- DIRECTORY -->
+    <div class="cms-section">
+      <div class="cms-section-title">Community Directory</div>
+      <div id="cms-directory-list" style="margin-bottom:1rem;"></div>
+      <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
+        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Homeowner</div>
+        <div class="cms-row">
+          <div class="cms-field">
+            <label class="cms-label">Name(s)</label>
+            <input type="text" class="cms-input" id="newDirName" placeholder="e.g. The Smith Family">
+          </div>
+          <div class="cms-field">
+            <label class="cms-label">Lot / Address</label>
+            <input type="text" class="cms-input" id="newDirLot" placeholder="e.g. Lot 12 — 456 Spruce Valley Dr">
+          </div>
+        </div>
+        <div class="cms-row">
+          <div class="cms-field">
+            <label class="cms-label">Phone</label>
+            <input type="text" class="cms-input" id="newDirPhone" placeholder="(555) 555-5555">
+          </div>
+          <div class="cms-field">
+            <label class="cms-label">Email</label>
+            <input type="text" class="cms-input" id="newDirEmail" placeholder="email@example.com">
+          </div>
+        </div>
+        <button class="cms-btn cms-btn-primary" onclick="addDirectoryEntry()">Add Homeowner</button>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="cms-section">
+      <div class="cms-section-title">HOA Documents</div>
+      <div id="cms-docs-list" style="margin-bottom:1rem;"></div>
+      <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
+        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Document Link</div>
+        <div class="cms-row">
+          <div class="cms-field">
+            <label class="cms-label">Document Name</label>
+            <input type="text" class="cms-input" id="newDocName" placeholder="e.g. Amended Bylaws 2023">
+          </div>
+          <div class="cms-field">
+            <label class="cms-label">Category</label>
+            <select class="cms-select" id="newDocCategory">
+              <option value="HOA Documents">HOA Documents</option>
+              <option value="Meeting Minutes">Meeting Minutes</option>
+              <option value="Financials">Financials</option>
+              <option value="Newsletters">Newsletters</option>
+              <option value="Waivers & Forms">Waivers & Forms</option>
+            </select>
+          </div>
+        </div>
+        <div class="cms-row">
+          <div class="cms-field">
+            <label class="cms-label">Date</label>
+            <input type="text" class="cms-input" id="newDocDate" placeholder="e.g. August 2023">
+          </div>
+          <div class="cms-field">
+            <label class="cms-label">URL / Link (Google Drive, Dropbox, etc.)</label>
+            <input type="text" class="cms-input" id="newDocUrl" placeholder="https://...">
+          </div>
+        </div>
+        <button class="cms-btn cms-btn-primary" onclick="addDocument()">Add Document</button>
+      </div>
+    </div>
+
+    <!-- CHANGE MEMBER PASSWORD -->
+    <div class="cms-section">
+      <div class="cms-section-title">Member Portal Password</div>
+      <div class="cms-row">
+        <div class="cms-field">
+          <label class="cms-label">New Password</label>
+          <input type="password" class="cms-input" id="newPassword" placeholder="Enter new password">
+        </div>
+        <div class="cms-field">
+          <label class="cms-label">Confirm Password</label>
+          <input type="password" class="cms-input" id="confirmPassword" placeholder="Confirm new password">
+        </div>
+      </div>
+      <button class="cms-btn cms-btn-secondary" onclick="changePassword()">Update Member Password</button>
+      <div id="passwordMsg" style="font-size:0.75rem; margin-top:0.5rem; display:none;"></div>
+    </div>
+
+    <!-- CHANGE ADMIN PASSWORD -->
+    <div class="cms-section">
+      <div class="cms-section-title">Admin Password</div>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1rem;">This is the password required to access Site Administration. Keep it separate and secure.</p>
+      <div class="cms-row">
+        <div class="cms-field">
+          <label class="cms-label">New Admin Password</label>
+          <input type="password" class="cms-input" id="newAdminPassword" placeholder="Enter new admin password">
+        </div>
+        <div class="cms-field">
+          <label class="cms-label">Confirm Admin Password</label>
+          <input type="password" class="cms-input" id="confirmAdminPassword" placeholder="Confirm admin password">
+        </div>
+      </div>
+      <button class="cms-btn cms-btn-secondary" onclick="changeAdminPassword()">Update Admin Password</button>
+      <div id="adminPasswordMsg" style="font-size:0.75rem; margin-top:0.5rem; display:none;"></div>
+    </div>
+
+    <div class="cms-save-bar">
+      <span class="cms-save-msg" id="cmsSaveMsg">Changes saved successfully.</span>
+      <button class="cms-btn cms-btn-secondary" onclick="closeCMS()">Done</button>
+      <button class="cms-btn cms-btn-primary" onclick="saveAll()">Save All Changes</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA STORE — loaded from localStorage, fallback to defaults
+// ═══════════════════════════════════════════════════
+
+const STORAGE_KEY = 'svr_site_data';
+
+const DEFAULT_DATA = {
+  password: 'SVR2024',
+  adminPassword: 'SVRAdmin2024',
+  adminEmail: 'SVRboard@gmail.com',
+  announcements: [
+    { id: 1, date: 'Spring 2025', text: 'Annual HOA meeting scheduled for June 14th at the picnic area. All homeowners encouraged to attend.' },
+    { id: 2, date: 'April 2025', text: 'Trail grooming for cross-country skiing has concluded for the season. Summer trails are now open.' }
+  ],
+  amenities: [
+    { id: 1, name: 'Goose Pasture Tarn', desc: 'Private lake access for Blue River residents — fishing, kayaking, canoeing, and paddleboarding amid spectacular mountain scenery.' },
+    { id: 2, name: 'Private Boathouse', desc: 'Exclusive SVR boathouse on the Tarn for storage of canoes and kayaks for homeowners and guests.' },
+    { id: 3, name: 'Stables & Trails', desc: 'A 10-stall stable for summer horse boarding, plus miles of multi-use trails through the ranch and into US Forest Service land.' },
+    { id: 4, name: 'Tennis Courts', desc: 'Regulation-size tennis and basketball courts available exclusively to Spruce Valley Ranch residents.' },
+    { id: 5, name: 'Trap & Skeet Range', desc: 'Private trap and skeet shooting range for the exclusive use of SVR homeowners and invited guests.' },
+    { id: 6, name: 'Picnic Area', desc: 'Beautiful community picnic and barbecue grounds along Indiana Creek — perfect for gatherings and community events.' },
+    { id: 7, name: 'XC Ski Trails', desc: 'Groomed cross-country ski and snowshoe trails through the ranch and into the National Forest each winter season.' }
+  ],
+  board: [
+    { id: 1, name: 'Board Member', role: 'President' },
+    { id: 2, name: 'Board Member', role: 'Vice President' },
+    { id: 3, name: 'Board Member', role: 'Treasurer' },
+    { id: 4, name: 'Board Member', role: 'Secretary' }
+  ],
+  directory: [
+    { id: 1, name: 'Sample Homeowner', lot: 'Lot 1 — 100 Spruce Valley Dr', phone: '(970) 555-0100', email: 'homeowner@example.com' }
+  ],
+  documents: [
+    { id: 1, name: 'Amended Bylaws', category: 'HOA Documents', date: 'August 17, 2017', url: '#' },
+    { id: 2, name: 'Declaration of Covenants, Conditions and Restrictions', category: 'HOA Documents', date: 'September 22, 1977', url: '#' },
+    { id: 3, name: 'First Amendment to Declaration', category: 'HOA Documents', date: 'November 21, 1990', url: '#' },
+    { id: 4, name: 'Supplementary Declaration', category: 'HOA Documents', date: 'October 6, 1978', url: '#' },
+    { id: 5, name: 'Annual Meeting Minutes', category: 'Meeting Minutes', date: 'June 2024', url: '#' },
+    { id: 6, name: 'Annual Budget', category: 'Financials', date: '2025', url: '#' },
+    { id: 7, name: 'SVR Newsletter', category: 'Newsletters', date: 'Winter 2024', url: '#' },
+    { id: 8, name: 'Stable Indemnification Agreement', category: 'Waivers & Forms', date: '2025', url: '#' }
+  ]
+};
+
+let siteData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
+}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+
+let isLoggedIn = false;
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const navLink = document.getElementById('nav-' + name);
+  if (navLink) navLink.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showLogin() {
+  document.getElementById('loginOverlay').classList.add('active');
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  setTimeout(() => document.getElementById('loginPassword').focus(), 100);
+}
+
+function hideLogin() {
+  document.getElementById('loginOverlay').classList.remove('active');
+}
+
+function doLogin() {
+  const pw = document.getElementById('loginPassword').value;
+  if (pw === siteData.password) {
+    isLoggedIn = true;
+    hideLogin();
+    showPage('members');
+    renderPortal();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginPassword').focus();
+  }
+}
+
+function doLogout() {
+  isLoggedIn = false;
+  showPage('home');
+}
+
+// ═══════════════════════════════════════════════════
+// PORTAL TABS
+// ═══════════════════════════════════════════════════
+
+function showPortalTab(name) {
+  document.querySelectorAll('.portal-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.portal-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════════════════
+
+function renderAnnouncements() {
+  const el = document.getElementById('announcementList');
+  if (!siteData.announcements.length) {
+    document.getElementById('announcementSection').style.display = 'none';
+    return;
+  }
+  document.getElementById('announcementSection').style.display = '';
+  el.innerHTML = siteData.announcements.map(a => `
+    <div class="announcement-item">
+      <span class="announcement-date">${a.date}</span>${a.text}
+    </div>
+  `).join('');
+}
+
+function renderAmenities() {
+  const icons = [
+    '<path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/>',
+    '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+    '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
+    '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+    '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>',
+    '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'
+  ];
+  document.getElementById('amenitiesGrid').innerHTML = siteData.amenities.map((a, i) => `
+    <div class="amenity-card">
+      <svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        ${icons[i % icons.length]}
+      </svg>
+      <div class="amenity-name">${a.name}</div>
+      <div class="amenity-desc">${a.desc}</div>
+    </div>
+  `).join('');
+}
+
+function renderBoard() {
+  const el = document.getElementById('boardList');
+  el.innerHTML = siteData.board.map(b => `
+    <div class="contact-item">
+      <div class="contact-item-label">${b.role}</div>
+      <div class="contact-item-value">${b.name}</div>
+    </div>
+  `).join('');
+  const emailEl = document.getElementById('contactEmail');
+  if (emailEl) {
+    emailEl.href = 'mailto:' + siteData.adminEmail;
+    emailEl.textContent = siteData.adminEmail;
+  }
+}
+
+function renderPortal() {
+  renderDocs();
+  renderDirectory();
+}
+
+function renderDocs() {
+  const categories = ['HOA Documents', 'Meeting Minutes', 'Financials', 'Newsletters', 'Waivers & Forms'];
+  const portalCategoryMap = {
+    'HOA Documents': 'docs',
+    'Meeting Minutes': 'financials',
+    'Financials': 'financials',
+    'Newsletters': 'newsletters',
+    'Waivers & Forms': 'docs'
+  };
+
+  const docsByCat = {};
+  siteData.documents.forEach(d => {
+    if (!docsByCat[d.category]) docsByCat[d.category] = [];
+    docsByCat[d.category].push(d);
+  });
+
+  // HOA Docs panel
+  let docsHtml = '';
+  ['HOA Documents', 'Waivers & Forms'].forEach(cat => {
+    if (docsByCat[cat] && docsByCat[cat].length) {
+      docsHtml += `<div class="doc-section-title">${cat}</div>`;
+      docsHtml += docsByCat[cat].map(d => docItemHTML(d)).join('');
+    }
+  });
+  document.getElementById('docsList').innerHTML = docsHtml || '<p style="color:var(--text-muted); font-size:0.85rem;">No documents added yet.</p>';
+
+  // Newsletters
+  let newsHtml = '';
+  if (docsByCat['Newsletters'] && docsByCat['Newsletters'].length) {
+    newsHtml = docsByCat['Newsletters'].map(d => docItemHTML(d)).join('');
+  }
+  document.getElementById('newslettersList').innerHTML = newsHtml || '<p style="color:var(--text-muted); font-size:0.85rem;">No newsletters added yet.</p>';
+
+  // Financials + Minutes
+  let finHtml = '';
+  ['Meeting Minutes', 'Financials'].forEach(cat => {
+    if (docsByCat[cat] && docsByCat[cat].length) {
+      finHtml += `<div class="doc-section-title">${cat}</div>`;
+      finHtml += docsByCat[cat].map(d => docItemHTML(d)).join('');
+    }
+  });
+  document.getElementById('financialsList').innerHTML = finHtml || '<p style="color:var(--text-muted); font-size:0.85rem;">No documents added yet.</p>';
+}
+
+function docItemHTML(d) {
+  return `
+    <a class="doc-item" href="${d.url}" target="_blank">
+      <svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+      </svg>
+      <div class="doc-info">
+        <div class="doc-name">${d.name}</div>
+        <div class="doc-meta">${d.date}</div>
+      </div>
+      <div class="doc-download">View →</div>
+    </a>
+  `;
+}
+
+function renderDirectory() {
+  document.getElementById('directoryGrid').innerHTML = siteData.directory.map(h => `
+    <div class="directory-card">
+      <div class="directory-name">${h.name}</div>
+      <div class="directory-detail"><span>Lot</span><span>${h.lot}</span></div>
+      <div class="directory-detail"><span>Phone</span><span>${h.phone}</span></div>
+      <div class="directory-detail"><span>Email</span><span>${h.email}</span></div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// CMS
+// ═══════════════════════════════════════════════════
+
+let isAdminAuthed = false;
+
+function showCMS() {
+  if (isAdminAuthed) {
+    document.getElementById('cmsOverlay').classList.add('active');
+    renderCMS();
+  } else {
+    document.getElementById('adminLoginOverlay').classList.add('active');
+    document.getElementById('adminLoginPassword').value = '';
+    document.getElementById('adminLoginError').style.display = 'none';
+    setTimeout(() => document.getElementById('adminLoginPassword').focus(), 100);
+  }
+}
+
+function doAdminLogin() {
+  const pw = document.getElementById('adminLoginPassword').value;
+  if (pw === siteData.adminPassword) {
+    isAdminAuthed = true;
+    closeAdminLogin();
+    document.getElementById('cmsOverlay').classList.add('active');
+    renderCMS();
+  } else {
+    document.getElementById('adminLoginError').style.display = 'block';
+    document.getElementById('adminLoginPassword').value = '';
+    document.getElementById('adminLoginPassword').focus();
+  }
+}
+
+function closeAdminLogin() {
+  document.getElementById('adminLoginOverlay').classList.remove('active');
+}
+
+function closeCMS() {
+  document.getElementById('cmsOverlay').classList.remove('active');
+}
+
+function saveAll() {
+  // sync email field
+  siteData.adminEmail = document.getElementById('cmsAdminEmail').value || siteData.adminEmail;
+  save();
+  renderAnnouncements();
+  renderAmenities();
+  renderBoard();
+  if (isLoggedIn) renderPortal();
+  const msg = document.getElementById('cmsSaveMsg');
+  msg.classList.add('visible');
+  setTimeout(() => msg.classList.remove('visible'), 3000);
+}
+
+function renderCMS() {
+  document.getElementById('cmsAdminEmail').value = siteData.adminEmail;
+
+  // Announcements
+  document.getElementById('cms-announcements-list').innerHTML = siteData.announcements.map(a => `
+    <div class="cms-item-row">
+      <div class="cms-item-info">
+        <div><strong>${a.date}</strong> — ${a.text}</div>
+      </div>
+      <div class="cms-actions">
+        <button class="cms-btn cms-btn-danger" onclick="removeAnnouncement(${a.id})">Remove</button>
+      </div>
+    </div>
+  `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No announcements.</div>';
+
+  // Amenities
+  document.getElementById('cms-amenities-list').innerHTML = siteData.amenities.map(a => `
+    <div class="cms-item-row">
+      <div class="cms-item-info">
+        <div>${a.name}</div>
+        <div class="cms-item-sub">${a.desc}</div>
+      </div>
+      <div class="cms-actions">
+        <button class="cms-btn cms-btn-danger" onclick="removeAmenity(${a.id})">Remove</button>
+      </div>
+    </div>
+  `).join('');
+
+  // Board
+  document.getElementById('cms-board-list').innerHTML = siteData.board.map(b => `
+    <div class="cms-item-row">
+      <div class="cms-item-info">
+        <div>${b.name} <span style="color:var(--gold-dim); font-size:0.75rem; margin-left:0.5rem;">${b.role}</span></div>
+      </div>
+      <div class="cms-actions">
+        <button class="cms-btn cms-btn-danger" onclick="removeBoardMember(${b.id})">Remove</button>
+      </div>
+    </div>
+  `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No board members.</div>';
+
+  // Directory
+  document.getElementById('cms-directory-list').innerHTML = siteData.directory.map(h => `
+    <div class="cms-item-row">
+      <div class="cms-item-info">
+        <div>${h.name}</div>
+        <div class="cms-item-sub">${h.lot} · ${h.phone}</div>
+      </div>
+      <div class="cms-actions">
+        <button class="cms-btn cms-btn-danger" onclick="removeDirectoryEntry(${h.id})">Remove</button>
+      </div>
+    </div>
+  `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No entries.</div>';
+
+  // Documents
+  document.getElementById('cms-docs-list').innerHTML = siteData.documents.map(d => `
+    <div class="cms-item-row">
+      <div class="cms-item-info">
+        <div>${d.name}</div>
+        <div class="cms-item-sub">${d.category} · ${d.date}</div>
+      </div>
+      <div class="cms-actions">
+        <button class="cms-btn cms-btn-danger" onclick="removeDocument(${d.id})">Remove</button>
+      </div>
+    </div>
+  `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No documents.</div>';
+}
+
+function nextId(arr) {
+  return arr.length ? Math.max(...arr.map(x => x.id)) + 1 : 1;
+}
+
+function addAnnouncement() {
+  const date = document.getElementById('newAnnDate').value.trim();
+  const text = document.getElementById('newAnnText').value.trim();
+  if (!date || !text) return alert('Please fill in both date and message.');
+  siteData.announcements.push({ id: nextId(siteData.announcements), date, text });
+  document.getElementById('newAnnDate').value = '';
+  document.getElementById('newAnnText').value = '';
+  renderCMS();
+}
+
+function removeAnnouncement(id) {
+  siteData.announcements = siteData.announcements.filter(a => a.id !== id);
+  renderCMS();
+}
+
+function addAmenity() {
+  const name = document.getElementById('newAmenityName').value.trim();
+  const desc = document.getElementById('newAmenityDesc').value.trim();
+  if (!name) return alert('Please enter an amenity name.');
+  siteData.amenities.push({ id: nextId(siteData.amenities), name, desc });
+  document.getElementById('newAmenityName').value = '';
+  document.getElementById('newAmenityDesc').value = '';
+  renderCMS();
+}
+
+function removeAmenity(id) {
+  siteData.amenities = siteData.amenities.filter(a => a.id !== id);
+  renderCMS();
+}
+
+function addBoardMember() {
+  const name = document.getElementById('newBoardName').value.trim();
+  const role = document.getElementById('newBoardRole').value.trim();
+  if (!name || !role) return alert('Please fill in name and role.');
+  siteData.board.push({ id: nextId(siteData.board), name, role });
+  document.getElementById('newBoardName').value = '';
+  document.getElementById('newBoardRole').value = '';
+  renderCMS();
+}
+
+function removeBoardMember(id) {
+  siteData.board = siteData.board.filter(b => b.id !== id);
+  renderCMS();
+}
+
+function addDirectoryEntry() {
+  const name = document.getElementById('newDirName').value.trim();
+  const lot = document.getElementById('newDirLot').value.trim();
+  const phone = document.getElementById('newDirPhone').value.trim();
+  const email = document.getElementById('newDirEmail').value.trim();
+  if (!name) return alert('Please enter a name.');
+  siteData.directory.push({ id: nextId(siteData.directory), name, lot, phone, email });
+  document.getElementById('newDirName').value = '';
+  document.getElementById('newDirLot').value = '';
+  document.getElementById('newDirPhone').value = '';
+  document.getElementById('newDirEmail').value = '';
+  renderCMS();
+}
+
+function removeDirectoryEntry(id) {
+  siteData.directory = siteData.directory.filter(h => h.id !== id);
+  renderCMS();
+}
+
+function addDocument() {
+  const name = document.getElementById('newDocName').value.trim();
+  const category = document.getElementById('newDocCategory').value;
+  const date = document.getElementById('newDocDate').value.trim();
+  const url = document.getElementById('newDocUrl').value.trim() || '#';
+  if (!name) return alert('Please enter a document name.');
+  siteData.documents.push({ id: nextId(siteData.documents), name, category, date, url });
+  document.getElementById('newDocName').value = '';
+  document.getElementById('newDocDate').value = '';
+  document.getElementById('newDocUrl').value = '';
+  renderCMS();
+}
+
+function removeDocument(id) {
+  siteData.documents = siteData.documents.filter(d => d.id !== id);
+  renderCMS();
+}
+
+function changePassword() {
+  const np = document.getElementById('newPassword').value;
+  const cp = document.getElementById('confirmPassword').value;
+  const msg = document.getElementById('passwordMsg');
+  if (!np) { msg.style.display = 'block'; msg.style.color = '#e07070'; msg.textContent = 'Please enter a new password.'; return; }
+  if (np !== cp) { msg.style.display = 'block'; msg.style.color = '#e07070'; msg.textContent = 'Passwords do not match.'; return; }
+  siteData.password = np;
+  save();
+  msg.style.display = 'block';
+  msg.style.color = '#80c880';
+  msg.textContent = 'Password updated successfully.';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+}
+
+function changeAdminPassword() {
+  const np = document.getElementById('newAdminPassword').value;
+  const cp = document.getElementById('confirmAdminPassword').value;
+  const msg = document.getElementById('adminPasswordMsg');
+  if (!np) { msg.style.display = 'block'; msg.style.color = '#e07070'; msg.textContent = 'Please enter a new admin password.'; return; }
+  if (np !== cp) { msg.style.display = 'block'; msg.style.color = '#e07070'; msg.textContent = 'Passwords do not match.'; return; }
+  siteData.adminPassword = np;
+  save();
+  msg.style.display = 'block';
+  msg.style.color = '#80c880';
+  msg.textContent = 'Admin password updated successfully.';
+  document.getElementById('newAdminPassword').value = '';
+  document.getElementById('confirmAdminPassword').value = '';
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderAnnouncements();
+  renderAmenities();
+  renderBoard();
+});
+</script>
+</body>
+</html>
