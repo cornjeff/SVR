@@ -1125,7 +1125,7 @@
             <h3>HOA Administration</h3>
             <div class="contact-item">
               <div class="contact-item-label">Email</div>
-              <div class="contact-item-value"><a id="contactEmail" href="mailto:SVRboard@gmail.com">SVRboard@gmail.com</a></div>
+              <div class="contact-item-value"><a id="contactEmail" href="/cdn-cgi/l/email-protection#f1a2a7a3939e908395b1969c90989ddf929e9c"><span class="__cf_email__" data-cfemail="9fccc9cdfdf0feedfbdff8f2fef6f3b1fcf0f2">[email&#160;protected]</span></a></div>
             </div>
             <div class="contact-item">
               <div class="contact-item-label">Community</div>
@@ -1201,6 +1201,12 @@
       <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1.5rem; font-style:italic;">
         Community directory is for the private use of SVR homeowners only. Please do not share this information outside the community.
       </p>
+      <div style="margin-bottom:1.5rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+        <input type="text" id="directorySearch" class="cms-input" placeholder="Search by name or lot number..." style="max-width:340px;" oninput="filterDirectory()">
+        <span id="directoryCount" style="font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em;"></span>
+        <button onclick="loadDirectory(true)" style="font-size:0.68rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-muted); background:none; border:1px solid var(--navy-border); padding:8px 14px; cursor:pointer; font-family:'Raleway',sans-serif; transition:all 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">↻ Refresh</button>
+      </div>
+      <div id="directoryStatus" style="display:none; padding:2rem; text-align:center; color:var(--text-muted); font-size:0.85rem; font-style:italic;"></div>
       <div class="directory-grid" id="directoryGrid"><!-- populated by JS --></div>
     </div>
 
@@ -1303,32 +1309,15 @@
 
     <!-- DIRECTORY -->
     <div class="cms-section">
-      <div class="cms-section-title">Community Directory</div>
-      <div id="cms-directory-list" style="margin-bottom:1rem;"></div>
-      <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
-        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Homeowner</div>
-        <div class="cms-row">
-          <div class="cms-field">
-            <label class="cms-label">Name(s)</label>
-            <input type="text" class="cms-input" id="newDirName" placeholder="e.g. The Smith Family">
-          </div>
-          <div class="cms-field">
-            <label class="cms-label">Lot / Address</label>
-            <input type="text" class="cms-input" id="newDirLot" placeholder="e.g. Lot 12 — 456 Spruce Valley Dr">
-          </div>
-        </div>
-        <div class="cms-row">
-          <div class="cms-field">
-            <label class="cms-label">Phone</label>
-            <input type="text" class="cms-input" id="newDirPhone" placeholder="(555) 555-5555">
-          </div>
-          <div class="cms-field">
-            <label class="cms-label">Email</label>
-            <input type="text" class="cms-input" id="newDirEmail" placeholder="email@example.com">
-          </div>
-        </div>
-        <button class="cms-btn cms-btn-primary" onclick="addDirectoryEntry()">Add Homeowner</button>
+      <div class="cms-section-title">Community Directory — Google Sheets Connection</div>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6;">
+        The directory is powered by your Google Sheet. Paste your Apps Script deployment URL below. Once set, the directory will always reflect whatever is in your Sheet — no further changes needed here.
+      </p>
+      <div class="cms-field">
+        <label class="cms-label">Apps Script Deployment URL</label>
+        <input type="text" class="cms-input" id="cmsSheetsUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
       </div>
+      <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.5rem;">Don't have this yet? Follow the setup instructions included with your spreadsheet template.</p>
     </div>
 
     <!-- DOCUMENTS -->
@@ -1411,7 +1400,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══════════════════════════════════════════════════
 // DATA STORE — loaded from localStorage, fallback to defaults
 // ═══════════════════════════════════════════════════
@@ -1422,6 +1411,7 @@ const DEFAULT_DATA = {
   password: 'SVR2024',
   adminPassword: 'SVRAdmin2024',
   adminEmail: 'SVRboard@gmail.com',
+  sheetsUrl: '',  // Paste your Google Apps Script deployment URL here via the CMS
   announcements: [
     { id: 1, date: 'Spring 2025', text: 'Annual HOA meeting scheduled for June 14th at the picnic area. All homeowners encouraged to attend.' },
     { id: 2, date: 'April 2025', text: 'Trail grooming for cross-country skiing has concluded for the season. Summer trails are now open.' }
@@ -1636,15 +1626,68 @@ function docItemHTML(d) {
   `;
 }
 
-function renderDirectory() {
-  document.getElementById('directoryGrid').innerHTML = siteData.directory.map(h => `
+let allMembers = [];
+
+function loadDirectory(forceRefresh) {
+  const grid = document.getElementById('directoryGrid');
+  const status = document.getElementById('directoryStatus');
+
+  if (!siteData.sheetsUrl) {
+    status.style.display = 'block';
+    status.innerHTML = '⚠ No Google Sheet connected yet. Add your Apps Script URL in Site Admin → Directory Settings.';
+    grid.innerHTML = '';
+    document.getElementById('directoryCount').textContent = '';
+    return;
+  }
+
+  status.style.display = 'block';
+  status.textContent = 'Loading directory…';
+  grid.innerHTML = '';
+  document.getElementById('directoryCount').textContent = '';
+
+  const url = siteData.sheetsUrl + (siteData.sheetsUrl.includes('?') ? '&' : '?') + 'nocache=' + Date.now();
+
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      allMembers = data.members || [];
+      status.style.display = 'none';
+      document.getElementById('directorySearch').value = '';
+      filterDirectory();
+    })
+    .catch(err => {
+      status.style.display = 'block';
+      status.textContent = 'Could not load directory. Check that your Apps Script URL is correct and deployed.';
+      grid.innerHTML = '';
+    });
+}
+
+function filterDirectory() {
+  const query = (document.getElementById('directorySearch').value || '').toLowerCase().trim();
+  const filtered = allMembers.filter(m => {
+    if (!query) return true;
+    return (m['Name(s)'] || '').toLowerCase().includes(query) ||
+           (m['Lot Number'] || '').toLowerCase().includes(query) ||
+           (m['Street Address'] || '').toLowerCase().includes(query);
+  });
+
+  const countEl = document.getElementById('directoryCount');
+  countEl.textContent = filtered.length + ' of ' + allMembers.length + ' homeowners';
+
+  document.getElementById('directoryGrid').innerHTML = filtered.length ? filtered.map(h => `
     <div class="directory-card">
-      <div class="directory-name">${h.name}</div>
-      <div class="directory-detail"><span>Lot</span><span>${h.lot}</span></div>
-      <div class="directory-detail"><span>Phone</span><span>${h.phone}</span></div>
-      <div class="directory-detail"><span>Email</span><span>${h.email}</span></div>
+      <div class="directory-name">${h['Name(s)'] || '—'}</div>
+      <div class="directory-detail"><span>Lot</span><span>${h['Lot Number'] || '—'}</span></div>
+      <div class="directory-detail"><span>Address</span><span>${h['Street Address'] || '—'}</span></div>
+      <div class="directory-detail"><span>Phone</span><span>${h['Phone'] || '—'}</span></div>
+      <div class="directory-detail"><span>Email</span><span>${h['Email'] || '—'}</span></div>
+      <div class="directory-detail"><span>Purchased</span><span>${h['Home Purchase Date'] || '—'}</span></div>
     </div>
-  `).join('');
+  `).join('') : '<p style="color:var(--text-muted); font-size:0.85rem; font-style:italic;">No results found.</p>';
+}
+
+function renderDirectory() {
+  loadDirectory(false);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1690,6 +1733,7 @@ function closeCMS() {
 function saveAll() {
   // sync email field
   siteData.adminEmail = document.getElementById('cmsAdminEmail').value || siteData.adminEmail;
+  siteData.sheetsUrl = document.getElementById('cmsSheetsUrl').value.trim();
   save();
   renderAnnouncements();
   renderAmenities();
@@ -1702,6 +1746,7 @@ function saveAll() {
 
 function renderCMS() {
   document.getElementById('cmsAdminEmail').value = siteData.adminEmail;
+  document.getElementById('cmsSheetsUrl').value = siteData.sheetsUrl || '';
 
   // Announcements
   document.getElementById('cms-announcements-list').innerHTML = siteData.announcements.map(a => `
@@ -1739,19 +1784,6 @@ function renderCMS() {
       </div>
     </div>
   `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No board members.</div>';
-
-  // Directory
-  document.getElementById('cms-directory-list').innerHTML = siteData.directory.map(h => `
-    <div class="cms-item-row">
-      <div class="cms-item-info">
-        <div>${h.name}</div>
-        <div class="cms-item-sub">${h.lot} · ${h.phone}</div>
-      </div>
-      <div class="cms-actions">
-        <button class="cms-btn cms-btn-danger" onclick="removeDirectoryEntry(${h.id})">Remove</button>
-      </div>
-    </div>
-  `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No entries.</div>';
 
   // Documents
   document.getElementById('cms-docs-list').innerHTML = siteData.documents.map(d => `
@@ -1816,25 +1848,6 @@ function removeBoardMember(id) {
   renderCMS();
 }
 
-function addDirectoryEntry() {
-  const name = document.getElementById('newDirName').value.trim();
-  const lot = document.getElementById('newDirLot').value.trim();
-  const phone = document.getElementById('newDirPhone').value.trim();
-  const email = document.getElementById('newDirEmail').value.trim();
-  if (!name) return alert('Please enter a name.');
-  siteData.directory.push({ id: nextId(siteData.directory), name, lot, phone, email });
-  document.getElementById('newDirName').value = '';
-  document.getElementById('newDirLot').value = '';
-  document.getElementById('newDirPhone').value = '';
-  document.getElementById('newDirEmail').value = '';
-  renderCMS();
-}
-
-function removeDirectoryEntry(id) {
-  siteData.directory = siteData.directory.filter(h => h.id !== id);
-  renderCMS();
-}
-
 function addDocument() {
   const name = document.getElementById('newDocName').value.trim();
   const category = document.getElementById('newDocCategory').value;
@@ -1885,13 +1898,4 @@ function changeAdminPassword() {
 
 // ═══════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════
-
-document.addEventListener('DOMContentLoaded', () => {
-  renderAnnouncements();
-  renderAmenities();
-  renderBoard();
-});
-</script>
-</body>
-</html>
+// ════════════════════�
