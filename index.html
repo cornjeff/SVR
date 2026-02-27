@@ -569,6 +569,20 @@
     font-family: 'Raleway', sans-serif;
   }
 
+  .login-link {
+    display: block;
+    width: 100%;
+    font-size: 0.7rem;
+    color: var(--gold-dim);
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-family: 'Raleway', sans-serif;
+    margin-bottom: 0.8rem;
+  }
+
   /* ─── MEMBERS PORTAL ─── */
   .portal-header {
     background: var(--navy-mid);
@@ -1275,11 +1289,43 @@
       </svg>
     </div>
     <div class="login-title">Homeowners Portal</div>
-    <div class="login-subtitle">Spruce Valley Ranch Homeowners</div>
-    <input type="password" class="login-input" id="loginPassword" placeholder="Enter homeowner password" onkeydown="if(event.key==='Enter')doLogin()">
-    <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
-    <button class="login-btn" onclick="doLogin()">Enter Portal</button>
-    <button class="login-close" onclick="hideLogin()">Cancel</button>
+    <div class="login-subtitle">Spruce Valley Ranch</div>
+    <!-- sign-in view -->
+    <div id="loginViewSignin">
+      <input type="email" class="login-input" id="loginEmail" placeholder="Email address" onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()">
+      <input type="password" class="login-input" id="loginPassword" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="login-error" id="loginError"></div>
+      <button class="login-btn" onclick="doLogin()">Enter Portal</button>
+      <button class="login-link" onclick="showLoginForgot()">Forgot password?</button>
+      <button class="login-close" onclick="hideLogin()">Cancel</button>
+    </div>
+    <!-- forgot password view -->
+    <div id="loginViewForgot" style="display:none;">
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1.2rem;line-height:1.6;">Enter your email and we'll send you a link to reset your password.</p>
+      <input type="email" class="login-input" id="forgotEmail" placeholder="Email address" onkeydown="if(event.key==='Enter')doForgotPassword()">
+      <div class="login-error" id="forgotError"></div>
+      <div id="forgotSuccess" style="display:none;font-size:0.78rem;color:var(--gold);margin-bottom:0.8rem;text-align:center;">Check your email for a reset link.</div>
+      <button class="login-btn" id="forgotSubmitBtn" onclick="doForgotPassword()">Send Reset Link</button>
+      <button class="login-link" onclick="showLoginSignin()">Back to sign in</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ UPDATE PASSWORD OVERLAY (recovery flow) ══════════════ -->
+<div class="login-overlay" id="updatePasswordOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2.5"/>
+        <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
+      </svg>
+    </div>
+    <div class="login-title">Set New Password</div>
+    <div class="login-subtitle">Spruce Valley Ranch</div>
+    <input type="password" class="login-input" id="newPasswordInput" placeholder="New password (min 8 chars)" onkeydown="if(event.key==='Enter')document.getElementById('confirmPasswordInput').focus()">
+    <input type="password" class="login-input" id="confirmPasswordInput" placeholder="Confirm new password" onkeydown="if(event.key==='Enter')doUpdatePassword()">
+    <div class="login-error" id="updatePasswordError"></div>
+    <button class="login-btn" onclick="doUpdatePassword()">Set Password</button>
   </div>
 </div>
 
@@ -1681,28 +1727,37 @@ create policy "public delete" on range_bookings for delete using (true);</pre>
           <input type="text" class="cms-input" id="cmsSupabaseKey" placeholder="eyJhbGci...">
         </div>
       </div>
-      <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:1.5rem; margin-top:0.3rem;">Find these in your Supabase project under <em>Project Settings → API</em>. Click <strong>Save All Changes</strong> to apply.</p>
+      <div class="cms-row">
+        <div class="cms-field" style="max-width:420px;">
+          <label class="cms-label">Supabase Service Role Key <span style="color:#e07070;">(keep secret — admin only)</span></label>
+          <input type="password" class="cms-input" id="cmsSupabaseServiceKey" placeholder="eyJhbGci... (service_role)">
+        </div>
+      </div>
+      <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:1.5rem; margin-top:0.3rem;">Find all three under <em>Project Settings → API</em> in your Supabase project. Click <strong>Save All Changes</strong> to apply.</p>
       <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.8rem;">Upcoming Reservations</div>
       <div id="cms-range-bookings-list" style="margin-bottom:1rem;"></div>
       <button class="cms-btn cms-btn-secondary" onclick="rangeClearPast()" style="margin-right:0.6rem;">Clear Past Bookings</button>
       <button class="cms-btn cms-btn-danger" onclick="rangeClearAll()">Clear All Bookings</button>
     </div>
 
-    <!-- CHANGE MEMBER PASSWORD -->
+    <!-- HOMEOWNER ACCOUNTS -->
     <div class="cms-section">
-      <div class="cms-section-title">Homeowner Portal Password</div>
-      <div class="cms-row">
-        <div class="cms-field">
-          <label class="cms-label">New Password</label>
-          <input type="password" class="cms-input" id="newPassword" placeholder="Enter new password">
+      <div class="cms-section-title">Homeowner Accounts</div>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6;">
+        Each homeowner gets their own email + password login. Enter an email below and click <strong>Send Invite</strong> — Supabase will email them a link to set their password. The Service Role Key (above) is required.
+      </p>
+      <div class="cms-row" style="align-items:flex-end; gap:0.8rem;">
+        <div class="cms-field" style="flex:1;">
+          <label class="cms-label">Homeowner Email</label>
+          <input type="email" class="cms-input" id="inviteEmail" placeholder="homeowner@email.com" onkeydown="if(event.key==='Enter')inviteHomeowner()">
         </div>
-        <div class="cms-field">
-          <label class="cms-label">Confirm Password</label>
-          <input type="password" class="cms-input" id="confirmPassword" placeholder="Confirm new password">
+        <div style="padding-bottom:0.05rem;">
+          <button class="cms-btn cms-btn-primary" id="inviteBtn" onclick="inviteHomeowner()">Send Invite</button>
         </div>
       </div>
-      <button class="cms-btn cms-btn-secondary" onclick="changePassword()">Update Homeowner Password</button>
-      <div id="passwordMsg" style="font-size:0.75rem; margin-top:0.5rem; display:none;"></div>
+      <div id="inviteMsg" style="font-size:0.75rem; margin-bottom:1rem;"></div>
+      <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.8rem; margin-top:0.5rem;">Current Accounts</div>
+      <div id="cms-accounts-list"></div>
     </div>
 
     <!-- CHANGE ADMIN PASSWORD -->
@@ -1778,12 +1833,14 @@ const DEFAULT_DATA = {
     { id: 8, name: 'Stable Indemnification Agreement', category: 'Waivers & Forms', date: '2025', url: '#' }
   ],
   supabaseUrl: '',
-  supabaseKey: ''
+  supabaseKey: '',
+  supabaseServiceKey: ''
 };
 
 let siteData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_DATA));
 if (!siteData.supabaseUrl) siteData.supabaseUrl = '';
 if (!siteData.supabaseKey) siteData.supabaseKey = '';
+if (!siteData.supabaseServiceKey) siteData.supabaseServiceKey = '';
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
@@ -1794,6 +1851,31 @@ function save() {
 // ═══════════════════════════════════════════════════
 
 let isLoggedIn = false;
+let currentSession = null; // { access_token, user }
+
+// ── Supabase Auth helpers ──────────────────────────
+
+function sbAuthUrl(path) {
+  return (siteData.supabaseUrl || '').replace(/\/$/, '') + '/auth/v1/' + path;
+}
+
+function sbAnonHeaders(extra) {
+  return Object.assign({ 'apikey': siteData.supabaseKey, 'Content-Type': 'application/json' }, extra || {});
+}
+
+function sbServiceHeaders() {
+  return { 'apikey': siteData.supabaseServiceKey, 'Authorization': 'Bearer ' + siteData.supabaseServiceKey, 'Content-Type': 'application/json' };
+}
+
+function sessionSave(s) {
+  currentSession = s;
+  if (s) localStorage.setItem('svr-session', JSON.stringify(s));
+  else localStorage.removeItem('svr-session');
+}
+
+function sessionLoad() {
+  try { return JSON.parse(localStorage.getItem('svr-session')); } catch(e) { return null; }
+}
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1805,33 +1887,277 @@ function showPage(name) {
 }
 
 function showLogin() {
+  showLoginSignin();
   document.getElementById('loginOverlay').classList.add('active');
-  document.getElementById('loginPassword').value = '';
-  document.getElementById('loginError').style.display = 'none';
-  setTimeout(() => document.getElementById('loginPassword').focus(), 100);
+  setTimeout(() => document.getElementById('loginEmail').focus(), 100);
 }
 
 function hideLogin() {
   document.getElementById('loginOverlay').classList.remove('active');
 }
 
-function doLogin() {
+function showLoginSignin() {
+  document.getElementById('loginViewSignin').style.display = '';
+  document.getElementById('loginViewForgot').style.display = 'none';
+  const err = document.getElementById('loginError');
+  err.textContent = '';
+  err.style.display = 'none';
+}
+
+function showLoginForgot() {
+  document.getElementById('loginViewSignin').style.display = 'none';
+  document.getElementById('loginViewForgot').style.display = '';
+  document.getElementById('forgotError').style.display = 'none';
+  document.getElementById('forgotError').textContent = '';
+  document.getElementById('forgotSuccess').style.display = 'none';
+  document.getElementById('forgotEmail').value = document.getElementById('loginEmail').value || '';
+  setTimeout(() => document.getElementById('forgotEmail').focus(), 100);
+}
+
+async function doLogin() {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) {
+    const err = document.getElementById('loginError');
+    err.textContent = 'Portal not configured yet. Contact your site admin.';
+    err.style.display = 'block';
+    return;
+  }
+  const email = document.getElementById('loginEmail').value.trim();
   const pw = document.getElementById('loginPassword').value;
-  if (pw === siteData.password) {
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  err.textContent = '';
+  if (!email || !pw) {
+    err.textContent = 'Please enter your email and password.';
+    err.style.display = 'block';
+    return;
+  }
+  try {
+    const res = await fetch(sbAuthUrl('token?grant_type=password'), {
+      method: 'POST',
+      headers: sbAnonHeaders(),
+      body: JSON.stringify({ email, password: pw })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      err.textContent = data.error_description || data.msg || 'Incorrect email or password.';
+      err.style.display = 'block';
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('loginPassword').focus();
+      return;
+    }
+    sessionSave({ access_token: data.access_token, user: data.user });
     isLoggedIn = true;
     hideLogin();
     showPage('members');
     renderPortal();
-  } else {
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginPassword').value = '';
-    document.getElementById('loginPassword').focus();
+  } catch(e) {
+    err.textContent = 'Network error. Please try again.';
+    err.style.display = 'block';
   }
 }
 
-function doLogout() {
+async function doLogout() {
+  if (currentSession && siteData.supabaseUrl && siteData.supabaseKey) {
+    try {
+      await fetch(sbAuthUrl('logout'), {
+        method: 'POST',
+        headers: sbAnonHeaders({ 'Authorization': 'Bearer ' + currentSession.access_token })
+      });
+    } catch(e) {}
+  }
+  sessionSave(null);
   isLoggedIn = false;
   showPage('home');
+}
+
+// ── Forgot & Reset Password ────────────────────────
+
+async function doForgotPassword() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  const err = document.getElementById('forgotError');
+  err.style.display = 'none';
+  err.textContent = '';
+  document.getElementById('forgotSuccess').style.display = 'none';
+  if (!email) {
+    err.textContent = 'Please enter your email address.';
+    err.style.display = 'block';
+    return;
+  }
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) {
+    err.textContent = 'Portal not configured yet. Contact your site admin.';
+    err.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('forgotSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {
+    await fetch(sbAuthUrl('recover'), {
+      method: 'POST',
+      headers: sbAnonHeaders(),
+      body: JSON.stringify({ email, redirectTo: window.location.href.split('#')[0] })
+    });
+    // Always show success to avoid email enumeration
+    document.getElementById('forgotSuccess').style.display = 'block';
+  } catch(e) {
+    err.textContent = 'Network error. Please try again.';
+    err.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Send Reset Link';
+}
+
+let recoveryToken = null;
+
+async function doUpdatePassword() {
+  const pw = document.getElementById('newPasswordInput').value;
+  const pw2 = document.getElementById('confirmPasswordInput').value;
+  const err = document.getElementById('updatePasswordError');
+  err.style.display = 'none';
+  err.textContent = '';
+  if (!pw || pw.length < 8) {
+    err.textContent = 'Password must be at least 8 characters.';
+    err.style.display = 'block';
+    return;
+  }
+  if (pw !== pw2) {
+    err.textContent = 'Passwords do not match.';
+    err.style.display = 'block';
+    return;
+  }
+  try {
+    const res = await fetch(sbAuthUrl('user'), {
+      method: 'PUT',
+      headers: sbAnonHeaders({ 'Authorization': 'Bearer ' + recoveryToken }),
+      body: JSON.stringify({ password: pw })
+    });
+    if (!res.ok) {
+      const d = await res.json();
+      err.textContent = d.error_description || d.msg || 'Failed to update password.';
+      err.style.display = 'block';
+      return;
+    }
+    document.getElementById('updatePasswordOverlay').classList.remove('active');
+    recoveryToken = null;
+    // Clear hash so a refresh doesn't re-trigger the form
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    showLogin();
+    const signinErr = document.getElementById('loginError');
+    signinErr.textContent = 'Password updated! Please sign in.';
+    signinErr.style.color = 'var(--gold)';
+    signinErr.style.display = 'block';
+  } catch(e) {
+    err.textContent = 'Network error. Please try again.';
+    err.style.display = 'block';
+  }
+}
+
+function checkRecoveryHash() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  const params = Object.fromEntries(hash.split('&').map(p => p.split('=')));
+  if (params.type === 'recovery' && params.access_token) {
+    recoveryToken = decodeURIComponent(params.access_token);
+    document.getElementById('newPasswordInput').value = '';
+    document.getElementById('confirmPasswordInput').value = '';
+    document.getElementById('updatePasswordError').style.display = 'none';
+    document.getElementById('updatePasswordOverlay').classList.add('active');
+  }
+}
+
+// ── Homeowner Accounts (admin) ─────────────────────
+
+async function inviteHomeowner() {
+  const email = document.getElementById('inviteEmail').value.trim();
+  const msg = document.getElementById('inviteMsg');
+  msg.textContent = '';
+  if (!email) { msg.style.color = '#e07070'; msg.textContent = 'Enter an email address.'; return; }
+  if (!siteData.supabaseUrl || !siteData.supabaseServiceKey) {
+    msg.style.color = '#e07070';
+    msg.textContent = 'Add your Supabase URL and Service Role Key above, then save.';
+    return;
+  }
+  const btn = document.getElementById('inviteBtn');
+  btn.disabled = true;
+  try {
+    const res = await fetch(sbAuthUrl('admin/users'), {
+      method: 'POST',
+      headers: sbServiceHeaders(),
+      body: JSON.stringify({ email, email_confirm: false, invite_user_by_email: true })
+    });
+    if (!res.ok) {
+      // Fall back to invite endpoint
+      const res2 = await fetch(sbAuthUrl('invite'), {
+        method: 'POST',
+        headers: sbServiceHeaders(),
+        body: JSON.stringify({ email })
+      });
+      if (!res2.ok) {
+        const d = await res2.json();
+        msg.style.color = '#e07070';
+        msg.textContent = d.msg || d.error_description || 'Failed to send invite.';
+        btn.disabled = false;
+        return;
+      }
+    }
+    msg.style.color = 'var(--gold)';
+    msg.textContent = 'Invite sent to ' + email;
+    document.getElementById('inviteEmail').value = '';
+    renderAccountsList();
+  } catch(e) {
+    msg.style.color = '#e07070';
+    msg.textContent = 'Network error.';
+  }
+  btn.disabled = false;
+}
+
+async function renderAccountsList() {
+  const el = document.getElementById('cms-accounts-list');
+  if (!siteData.supabaseUrl || !siteData.supabaseServiceKey) {
+    el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);">Add Service Role Key above and save to manage accounts.</div>';
+    return;
+  }
+  el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);">Loading…</div>';
+  try {
+    const res = await fetch(sbAuthUrl('admin/users?per_page=50'), { headers: sbServiceHeaders() });
+    if (!res.ok) {
+      el.innerHTML = '<div style="font-size:0.78rem;color:#e07070;">Could not load users. Check your Service Role Key.</div>';
+      return;
+    }
+    const data = await res.json();
+    const users = data.users || [];
+    if (!users.length) {
+      el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);">No homeowner accounts yet.</div>';
+      return;
+    }
+    el.innerHTML = users.map(u => {
+      const label = u.email || u.id;
+      const status = u.confirmed_at ? 'Active' : 'Invite pending';
+      return '<div class="cms-item-row">' +
+        '<div class="cms-item-info">' +
+          '<div>' + escHtml(label) + '</div>' +
+          '<div class="cms-item-sub">' + status + '</div>' +
+        '</div>' +
+        '<div class="cms-actions">' +
+          '<button class="cms-btn cms-btn-danger" onclick="removeHomeowner(\'' + escHtml(u.id) + '\')">Remove</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="font-size:0.78rem;color:#e07070;">Network error loading accounts.</div>';
+  }
+}
+
+async function removeHomeowner(uid) {
+  if (!confirm('Remove this homeowner account?')) return;
+  try {
+    const res = await fetch(sbAuthUrl('admin/users/' + uid), {
+      method: 'DELETE',
+      headers: sbServiceHeaders()
+    });
+    if (!res.ok) { alert('Could not remove account.'); return; }
+    renderAccountsList();
+  } catch(e) { alert('Network error.'); }
 }
 
 // ═══════════════════════════════════════════════════
@@ -2074,6 +2400,7 @@ function saveAll() {
   siteData.sheetsUrl = document.getElementById('cmsSheetsUrl').value.trim();
   siteData.supabaseUrl = document.getElementById('cmsSupabaseUrl').value.trim();
   siteData.supabaseKey = document.getElementById('cmsSupabaseKey').value.trim();
+  siteData.supabaseServiceKey = document.getElementById('cmsSupabaseServiceKey').value.trim();
   save();
   renderAnnouncements();
   renderAmenities();
@@ -2089,6 +2416,8 @@ function renderCMS() {
   document.getElementById('cmsSheetsUrl').value = siteData.sheetsUrl || '';
   document.getElementById('cmsSupabaseUrl').value = siteData.supabaseUrl || '';
   document.getElementById('cmsSupabaseKey').value = siteData.supabaseKey || '';
+  document.getElementById('cmsSupabaseServiceKey').value = siteData.supabaseServiceKey || '';
+  renderAccountsList();
 
   // Announcements
   document.getElementById('cms-announcements-list').innerHTML = siteData.announcements.map(a => `
@@ -2646,6 +2975,14 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAnnouncements();
   renderAmenities();
   renderBoard();
+  // Restore session from localStorage
+  const saved = sessionLoad();
+  if (saved && saved.access_token) {
+    currentSession = saved;
+    isLoggedIn = true;
+  }
+  // Handle recovery link in URL hash
+  checkRecoveryHash();
 });
 </script>
 </body>
