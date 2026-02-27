@@ -638,6 +638,255 @@
   .portal-panel { display: none; }
   .portal-panel.active { display: block; }
 
+  /* ─── RANGE SCHEDULER ─── */
+  .range-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .range-nav-btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--navy-border);
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .range-nav-btn:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+  .range-nav-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--cream-dim);
+    flex: 1;
+    text-align: center;
+  }
+
+  .range-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-bottom: 2.5rem;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 700px) {
+    .range-calendar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  .range-day {
+    border: 1px solid var(--navy-border);
+    background: var(--navy-mid);
+  }
+
+  .range-day-header {
+    padding: 0.65rem 0.4rem;
+    text-align: center;
+    border-bottom: 1px solid var(--navy-border);
+    background: var(--navy-light);
+  }
+
+  .range-day-name {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .range-day-date {
+    font-family: 'Cinzel', serif;
+    font-size: 0.82rem;
+    color: var(--cream);
+    margin-top: 0.2rem;
+  }
+
+  .range-day-date.today { color: var(--gold); }
+
+  .range-slot {
+    padding: 0.5rem 0.4rem;
+    border-bottom: 1px solid rgba(42, 61, 84, 0.5);
+    font-family: 'Raleway', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-height: 52px;
+    justify-content: center;
+  }
+
+  .range-slot:last-child { border-bottom: none; }
+
+  .range-slot-time {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .range-slot.available { cursor: pointer; }
+  .range-slot.available:hover { background: var(--navy-light); }
+
+  .range-book-btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.52rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: none;
+    border: 1px solid var(--gold-dim);
+    padding: 3px 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.15rem;
+    transition: all 0.2s;
+  }
+
+  .range-book-btn:hover { background: rgba(201, 168, 76, 0.1); }
+
+  .range-slot.booked-other { background: rgba(26, 40, 56, 0.4); }
+
+  .range-slot-name {
+    font-size: 0.58rem;
+    color: var(--cream-dim);
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .range-slot.booked-mine {
+    background: rgba(201, 168, 76, 0.05);
+    border-left: 2px solid var(--gold-dim);
+  }
+
+  .range-cancel-btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #e07070;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1px 0;
+    text-align: left;
+    opacity: 0.7;
+  }
+
+  .range-cancel-btn:hover { opacity: 1; }
+
+  .range-slot.past { opacity: 0.35; cursor: default; }
+
+  .range-my-bookings {
+    border-top: 1px solid var(--navy-border);
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .range-my-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--navy-border);
+  }
+
+  .range-booking-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    margin-bottom: 0.4rem;
+  }
+
+  .range-booking-info {
+    font-size: 0.78rem;
+    color: var(--cream-dim);
+  }
+
+  .range-booking-meta {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    margin-top: 0.15rem;
+  }
+
+  /* Booking confirmation modal */
+  .range-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 18, 30, 0.92);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .range-modal-overlay.active { display: flex; }
+
+  .range-modal {
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .range-modal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    color: var(--cream);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.35rem;
+  }
+
+  .range-modal-sub {
+    font-size: 0.75rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.06em;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .range-modal-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .range-modal-error {
+    font-size: 0.72rem;
+    color: #e07070;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  .range-modal-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+  }
+
   /* ─── DOCUMENT LIST ─── */
   .doc-section-title {
     font-family: 'Cinzel', serif;
@@ -1213,6 +1462,7 @@
     <button class="portal-tab" onclick="showPortalTab('directory')">Community Directory</button>
     <button class="portal-tab" onclick="showPortalTab('newsletters')">Newsletters</button>
     <button class="portal-tab" onclick="showPortalTab('financials')">Minutes & Financials</button>
+    <button class="portal-tab" onclick="showPortalTab('range')">Range Scheduling</button>
   </div>
   <div class="portal-content">
 
@@ -1245,6 +1495,26 @@
       <div id="financialsList"><!-- populated by JS --></div>
     </div>
 
+    <!-- RANGE SCHEDULING -->
+    <div class="portal-panel" id="panel-range">
+      <div id="rangeSchedulerRoot"><!-- populated by JS --></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ RANGE BOOKING MODAL ═══════════════════════ -->
+<div class="range-modal-overlay" id="rangeBookingModal">
+  <div class="range-modal">
+    <div class="range-modal-title">Book Range Session</div>
+    <div class="range-modal-sub" id="rangeModalSlotLabel"></div>
+    <label class="range-modal-label">Your Name</label>
+    <input type="text" class="cms-input" id="rangeModalName" placeholder="Enter your full name" onkeydown="if(event.key==='Enter')rangeConfirmBook()">
+    <div class="range-modal-error" id="rangeModalError">Please enter your name to continue.</div>
+    <div class="range-modal-actions">
+      <button class="cms-btn cms-btn-primary" onclick="rangeConfirmBook()">Confirm Booking</button>
+      <button class="cms-btn cms-btn-secondary" onclick="rangeCloseModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -1381,6 +1651,43 @@
       </div>
     </div>
 
+    <!-- RANGE BOOKINGS -->
+    <div class="cms-section">
+      <div class="cms-section-title">Trap &amp; Skeet Range — Supabase &amp; Bookings</div>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6;">
+        Bookings are stored in Supabase so all homeowners share the same live schedule. Create a free project at
+        <strong style="color:var(--cream-dim);">supabase.com</strong>, then paste your credentials below.<br>
+        In your Supabase project run this SQL once to create the bookings table:
+      </p>
+      <pre style="font-size:0.68rem; color:var(--cream-dim); background:var(--navy); border:1px solid var(--navy-border); padding:1rem; margin-bottom:1.2rem; overflow-x:auto; white-space:pre; line-height:1.6;">create table range_bookings (
+  id bigint generated always as identity primary key,
+  date text not null,
+  hour integer not null,
+  name text not null,
+  booked_at timestamptz default now(),
+  unique(date, hour)
+);
+alter table range_bookings enable row level security;
+create policy "public read"   on range_bookings for select using (true);
+create policy "public insert" on range_bookings for insert with check (true);
+create policy "public delete" on range_bookings for delete using (true);</pre>
+      <div class="cms-row">
+        <div class="cms-field">
+          <label class="cms-label">Supabase Project URL</label>
+          <input type="text" class="cms-input" id="cmsSupabaseUrl" placeholder="https://xxxx.supabase.co">
+        </div>
+        <div class="cms-field">
+          <label class="cms-label">Supabase Anon (Public) Key</label>
+          <input type="text" class="cms-input" id="cmsSupabaseKey" placeholder="eyJhbGci...">
+        </div>
+      </div>
+      <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:1.5rem; margin-top:0.3rem;">Find these in your Supabase project under <em>Project Settings → API</em>. Click <strong>Save All Changes</strong> to apply.</p>
+      <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:0.8rem;">Upcoming Reservations</div>
+      <div id="cms-range-bookings-list" style="margin-bottom:1rem;"></div>
+      <button class="cms-btn cms-btn-secondary" onclick="rangeClearPast()" style="margin-right:0.6rem;">Clear Past Bookings</button>
+      <button class="cms-btn cms-btn-danger" onclick="rangeClearAll()">Clear All Bookings</button>
+    </div>
+
     <!-- CHANGE MEMBER PASSWORD -->
     <div class="cms-section">
       <div class="cms-section-title">Homeowner Portal Password</div>
@@ -1469,10 +1776,14 @@ const DEFAULT_DATA = {
     { id: 6, name: 'Annual Budget', category: 'Financials', date: '2025', url: '#' },
     { id: 7, name: 'SVR Newsletter', category: 'Newsletters', date: 'Winter 2024', url: '#' },
     { id: 8, name: 'Stable Indemnification Agreement', category: 'Waivers & Forms', date: '2025', url: '#' }
-  ]
+  ],
+  supabaseUrl: '',
+  supabaseKey: ''
 };
 
 let siteData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+if (!siteData.supabaseUrl) siteData.supabaseUrl = '';
+if (!siteData.supabaseKey) siteData.supabaseKey = '';
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
@@ -1532,6 +1843,7 @@ function showPortalTab(name) {
   document.querySelectorAll('.portal-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + name).classList.add('active');
   event.target.classList.add('active');
+  if (name === 'range') renderRangeScheduler();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1760,6 +2072,8 @@ function saveAll() {
   // sync email field
   siteData.adminEmail = document.getElementById('cmsAdminEmail').value || siteData.adminEmail;
   siteData.sheetsUrl = document.getElementById('cmsSheetsUrl').value.trim();
+  siteData.supabaseUrl = document.getElementById('cmsSupabaseUrl').value.trim();
+  siteData.supabaseKey = document.getElementById('cmsSupabaseKey').value.trim();
   save();
   renderAnnouncements();
   renderAmenities();
@@ -1773,6 +2087,8 @@ function saveAll() {
 function renderCMS() {
   document.getElementById('cmsAdminEmail').value = siteData.adminEmail;
   document.getElementById('cmsSheetsUrl').value = siteData.sheetsUrl || '';
+  document.getElementById('cmsSupabaseUrl').value = siteData.supabaseUrl || '';
+  document.getElementById('cmsSupabaseKey').value = siteData.supabaseKey || '';
 
   // Announcements
   document.getElementById('cms-announcements-list').innerHTML = siteData.announcements.map(a => `
@@ -1826,6 +2142,9 @@ function renderCMS() {
       </div>
     </div>
   `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No documents.</div>';
+
+  // Range bookings — async fetch from Supabase
+  renderCMSRangeBookings();
 }
 
 function nextId(arr) {
@@ -1954,6 +2273,369 @@ function changeAdminPassword() {
   msg.textContent = 'Admin password updated successfully.';
   document.getElementById('newAdminPassword').value = '';
   document.getElementById('confirmAdminPassword').value = '';
+}
+
+// ═══════════════════════════════════════════════════
+// RANGE SCHEDULING — Supabase-backed
+// ═══════════════════════════════════════════════════
+//
+// One-time Supabase setup (run in SQL Editor):
+//
+//   create table range_bookings (
+//     id bigint generated always as identity primary key,
+//     date text not null,
+//     hour integer not null,
+//     name text not null,
+//     booked_at timestamptz default now(),
+//     unique(date, hour)
+//   );
+//   alter table range_bookings enable row level security;
+//   create policy "public read"   on range_bookings for select using (true);
+//   create policy "public insert" on range_bookings for insert with check (true);
+//   create policy "public delete" on range_bookings for delete using (true);
+//
+// Then add Project URL + anon key in Site Admin → Range Bookings.
+
+const RANGE_HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+let rangeViewStart = null;
+let rangePendingDate = null;
+let rangePendingHour = null;
+
+function rangeFormatHour(h) {
+  if (h === 12) return '12 PM';
+  return h < 12 ? h + ' AM' : (h - 12) + ' PM';
+}
+
+function rangeFormatDate(d) {
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function rangeDateStr(d) {
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+
+function rangeParseDateStr(s) {
+  const p = s.split('-').map(Number);
+  return new Date(p[0], p[1] - 1, p[2]);
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function rangeInitViewStart() {
+  const t = new Date();
+  t.setHours(0, 0, 0, 0);
+  rangeViewStart = t;
+}
+
+// ── Supabase REST helpers ──────────────────────────
+
+function sbHeaders() {
+  return {
+    'apikey': siteData.supabaseKey,
+    'Authorization': 'Bearer ' + siteData.supabaseKey,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  };
+}
+
+function sbUrl(path) {
+  return (siteData.supabaseUrl || '').replace(/\/$/, '') + '/rest/v1/' + path;
+}
+
+async function sbFetchBookings(startDateStr, endDateStr) {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return [];
+  try {
+    const res = await fetch(
+      sbUrl('range_bookings?select=*&date=gte.' + startDateStr + '&date=lte.' + endDateStr + '&order=date,hour'),
+      { headers: sbHeaders() }
+    );
+    return res.ok ? await res.json() : [];
+  } catch (e) { return []; }
+}
+
+// ── Render ─────────────────────────────────────────
+
+async function renderRangeScheduler() {
+  if (!rangeViewStart) rangeInitViewStart();
+  const root = document.getElementById('rangeSchedulerRoot');
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const maxDate = new Date(today); maxDate.setDate(maxDate.getDate() + 30);
+  const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const HEADER =
+    '<div style="margin-bottom:1.5rem;">' +
+      '<div style="font-family:\'Cinzel\',serif; font-size:1.05rem; color:var(--cream); letter-spacing:0.08em; margin-bottom:0.4rem;">Trap &amp; Skeet Range</div>' +
+      '<div style="font-size:0.75rem; color:var(--text-muted); letter-spacing:0.05em; line-height:1.7;">Reserve your time at the range &nbsp;&middot;&nbsp; 1-hour sessions &nbsp;&middot;&nbsp; Exclusive per slot &nbsp;&middot;&nbsp; Book up to 30 days ahead &nbsp;&middot;&nbsp; 8 AM &ndash; 6 PM daily</div>' +
+    '</div>';
+
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) {
+    root.innerHTML = HEADER +
+      '<div style="padding:2rem; border:1px solid var(--navy-border); text-align:center; color:var(--text-muted); font-size:0.82rem; line-height:1.9;">' +
+        'Range scheduling requires a one-time Supabase setup.<br>' +
+        '<span style="font-size:0.72rem; opacity:0.7;">Ask your site admin to add the Supabase URL and API key under Site Administration.</span>' +
+      '</div>';
+    return;
+  }
+
+  // Build 7-day window
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(rangeViewStart);
+    d.setDate(d.getDate() + i);
+    days.push(d);
+  }
+  const startLabel = rangeFormatDate(days[0]);
+  const endLabel   = rangeFormatDate(days[6]);
+
+  // Show loading placeholder while fetching
+  root.innerHTML = HEADER +
+    '<div class="range-nav">' +
+      '<button class="range-nav-btn" onclick="rangeNavigate(-7)">&larr; Prev Week</button>' +
+      '<div class="range-nav-label">' + startLabel + ' &ndash; ' + endLabel + '</div>' +
+      '<button class="range-nav-btn" onclick="rangeNavigate(7)">Next Week &rarr;</button>' +
+    '</div>' +
+    '<div style="padding:2rem; text-align:center; color:var(--text-muted); font-size:0.82rem; letter-spacing:0.06em;">Loading schedule&hellip;</div>';
+
+  // Fetch the 7-day window AND all future bookings (for "My Reservations")
+  const [weekBookings, allFuture] = await Promise.all([
+    sbFetchBookings(rangeDateStr(days[0]), rangeDateStr(days[6])),
+    sbFetchBookings(rangeDateStr(today), rangeDateStr(maxDate))
+  ]);
+
+  // Build calendar
+  const myName = sessionStorage.getItem('svr_range_name') || '';
+  let calHtml = '';
+  days.forEach(function(day) {
+    const dateStr = rangeDateStr(day);
+    const isToday = dateStr === rangeDateStr(today);
+    const isBeyond = day > maxDate;
+
+    let dayHtml = '<div class="range-day">';
+    dayHtml += '<div class="range-day-header">';
+    dayHtml += '<div class="range-day-name">' + DAY_NAMES[day.getDay()] + '</div>';
+    dayHtml += '<div class="range-day-date' + (isToday ? ' today' : '') + '">' + day.getDate() + '</div>';
+    dayHtml += '</div>';
+
+    RANGE_HOURS.forEach(function(hour) {
+      const booking = weekBookings.find(function(b) { return b.date === dateStr && b.hour === hour; });
+      const slotDt = new Date(day); slotDt.setHours(hour, 0, 0, 0);
+      const isPast = slotDt <= new Date();
+
+      if (isPast || isBeyond) {
+        dayHtml += '<div class="range-slot past">';
+        dayHtml += '<div class="range-slot-time">' + rangeFormatHour(hour) + '</div>';
+        if (booking) dayHtml += '<div class="range-slot-name">' + escHtml(booking.name) + '</div>';
+        dayHtml += '</div>';
+      } else if (booking) {
+        const isMine = myName && booking.name.toLowerCase() === myName.toLowerCase();
+        dayHtml += '<div class="range-slot ' + (isMine ? 'booked-mine' : 'booked-other') + '">';
+        dayHtml += '<div class="range-slot-time">' + rangeFormatHour(hour) + '</div>';
+        dayHtml += '<div class="range-slot-name">' + escHtml(booking.name) + '</div>';
+        if (isMine) {
+          dayHtml += '<button class="range-cancel-btn" onclick="rangeCancelSlot(' + booking.id + ')">&#x2715; Cancel</button>';
+        }
+        dayHtml += '</div>';
+      } else {
+        dayHtml += '<div class="range-slot available" onclick="rangeOpenModal(\'' + dateStr + '\',' + hour + ')">';
+        dayHtml += '<div class="range-slot-time">' + rangeFormatHour(hour) + '</div>';
+        dayHtml += '<button class="range-book-btn">Book</button>';
+        dayHtml += '</div>';
+      }
+    });
+    dayHtml += '</div>';
+    calHtml += dayHtml;
+  });
+
+  // My upcoming reservations (all 30-day window, not just current page)
+  let myHtml = '';
+  if (myName) {
+    const now = new Date();
+    const myUpcoming = allFuture.filter(function(b) {
+      if (b.name.toLowerCase() !== myName.toLowerCase()) return false;
+      const d = rangeParseDateStr(b.date); d.setHours(b.hour, 0, 0, 0);
+      return d > now;
+    }).sort(function(a, b) {
+      const da = rangeParseDateStr(a.date); da.setHours(a.hour);
+      const db = rangeParseDateStr(b.date); db.setHours(b.hour);
+      return da - db;
+    });
+    if (myUpcoming.length) {
+      myHtml = '<div class="range-my-bookings"><div class="range-my-title">My Upcoming Reservations</div>';
+      myUpcoming.forEach(function(b) {
+        const d = rangeParseDateStr(b.date);
+        const label = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        myHtml += '<div class="range-booking-item">';
+        myHtml += '<div><div class="range-booking-info">' + label + ' &middot; ' + rangeFormatHour(b.hour) + ' &ndash; ' + rangeFormatHour(b.hour + 1) + '</div>';
+        myHtml += '<div class="range-booking-meta">Reserved by ' + escHtml(b.name) + '</div></div>';
+        myHtml += '<button class="range-cancel-btn" onclick="rangeCancelSlot(' + b.id + ')">Cancel</button>';
+        myHtml += '</div>';
+      });
+      myHtml += '</div>';
+    }
+  }
+
+  root.innerHTML = HEADER +
+    '<div class="range-nav">' +
+      '<button class="range-nav-btn" onclick="rangeNavigate(-7)">&larr; Prev Week</button>' +
+      '<div class="range-nav-label">' + startLabel + ' &ndash; ' + endLabel + '</div>' +
+      '<button class="range-nav-btn" onclick="rangeNavigate(7)">Next Week &rarr;</button>' +
+    '</div>' +
+    '<div class="range-calendar">' + calHtml + '</div>' +
+    myHtml;
+}
+
+function rangeNavigate(offset) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const maxDate = new Date(today); maxDate.setDate(maxDate.getDate() + 30);
+  const newStart = new Date(rangeViewStart);
+  newStart.setDate(newStart.getDate() + offset);
+  if (newStart < today || newStart > maxDate) return;
+  rangeViewStart = newStart;
+  renderRangeScheduler();
+}
+
+function rangeOpenModal(dateStr, hour) {
+  rangePendingDate = dateStr;
+  rangePendingHour = hour;
+  const d = rangeParseDateStr(dateStr);
+  const label = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  document.getElementById('rangeModalSlotLabel').textContent =
+    label + ' \u00b7 ' + rangeFormatHour(hour) + ' \u2013 ' + rangeFormatHour(hour + 1);
+  const nameInput = document.getElementById('rangeModalName');
+  const saved = sessionStorage.getItem('svr_range_name') || '';
+  nameInput.value = saved;
+  document.getElementById('rangeModalError').style.display = 'none';
+  document.getElementById('rangeModalError').textContent = 'Please enter your name to continue.';
+  document.getElementById('rangeBookingModal').classList.add('active');
+  setTimeout(function() { nameInput.focus(); if (saved) nameInput.select(); }, 100);
+}
+
+function rangeCloseModal() {
+  document.getElementById('rangeBookingModal').classList.remove('active');
+  rangePendingDate = null;
+  rangePendingHour = null;
+}
+
+async function rangeConfirmBook() {
+  const name = document.getElementById('rangeModalName').value.trim();
+  if (!name) {
+    document.getElementById('rangeModalError').style.display = 'block';
+    document.getElementById('rangeModalName').focus();
+    return;
+  }
+  if (!rangePendingDate || rangePendingHour === null) return;
+
+  const btn = document.querySelector('#rangeBookingModal .cms-btn-primary');
+  const origText = btn.textContent;
+  btn.textContent = 'Booking\u2026';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(sbUrl('range_bookings'), {
+      method: 'POST',
+      headers: sbHeaders(),
+      body: JSON.stringify({ date: rangePendingDate, hour: rangePendingHour, name: name })
+    });
+
+    if (res.status === 409 || res.status === 23505) {
+      // Unique constraint violation — slot taken
+      document.getElementById('rangeModalError').textContent = 'This slot was just booked. Please choose another time.';
+      document.getElementById('rangeModalError').style.display = 'block';
+      btn.textContent = origText;
+      btn.disabled = false;
+      renderRangeScheduler();
+      return;
+    }
+    if (!res.ok) {
+      const body = await res.json().catch(function() { return {}; });
+      // Supabase returns 400 with code 23505 for unique violations
+      if (body.code === '23505') {
+        document.getElementById('rangeModalError').textContent = 'This slot was just booked. Please choose another time.';
+        document.getElementById('rangeModalError').style.display = 'block';
+        btn.textContent = origText;
+        btn.disabled = false;
+        renderRangeScheduler();
+        return;
+      }
+      throw new Error('booking failed');
+    }
+
+    sessionStorage.setItem('svr_range_name', name);
+    rangeCloseModal();
+    renderRangeScheduler();
+  } catch (e) {
+    document.getElementById('rangeModalError').textContent = 'Unable to complete booking. Please try again.';
+    document.getElementById('rangeModalError').style.display = 'block';
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
+
+async function rangeCancelSlot(bookingId) {
+  try {
+    await fetch(sbUrl('range_bookings?id=eq.' + bookingId), {
+      method: 'DELETE',
+      headers: sbHeaders()
+    });
+  } catch (e) { /* best effort */ }
+  renderRangeScheduler();
+}
+
+async function rangeClearPast() {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+  const now = new Date();
+  // Build an ISO timestamp for "now minus 1 hour" to catch the current hour too
+  const cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()).toISOString();
+  try {
+    await fetch(sbUrl('range_bookings?booked_at=lt.' + cutoff), {
+      method: 'DELETE',
+      headers: sbHeaders()
+    });
+  } catch (e) { /* best effort */ }
+  renderCMSRangeBookings();
+}
+
+async function rangeClearAll() {
+  if (!confirm('Remove ALL range bookings? This cannot be undone.')) return;
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+  // DELETE with a filter that matches everything (Supabase requires a filter for safety)
+  try {
+    await fetch(sbUrl('range_bookings?id=gte.0'), {
+      method: 'DELETE',
+      headers: sbHeaders()
+    });
+  } catch (e) { /* best effort */ }
+  renderCMSRangeBookings();
+}
+
+async function renderCMSRangeBookings() {
+  const el = document.getElementById('cms-range-bookings-list');
+  el.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);">Loading\u2026</div>';
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) {
+    el.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);">Configure Supabase credentials above and save to manage bookings.</div>';
+    return;
+  }
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const maxDate = new Date(today); maxDate.setDate(maxDate.getDate() + 60);
+  const bookings = await sbFetchBookings(rangeDateStr(today), rangeDateStr(maxDate));
+  el.innerHTML = bookings.map(function(b) {
+    const d = rangeParseDateStr(b.date);
+    const label = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    return '<div class="cms-item-row">' +
+      '<div class="cms-item-info">' +
+        '<div>' + escHtml(b.name) + '</div>' +
+        '<div class="cms-item-sub">' + label + ' &middot; ' + rangeFormatHour(b.hour) + ' &ndash; ' + rangeFormatHour(b.hour + 1) + '</div>' +
+      '</div>' +
+      '<div class="cms-actions">' +
+        '<button class="cms-btn cms-btn-danger" onclick="rangeCancelSlot(' + b.id + ').then(renderCMSRangeBookings)">Remove</button>' +
+      '</div>' +
+    '</div>';
+  }).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No upcoming bookings.</div>';
 }
 
 // ═══════════════════════════════════════════════════
