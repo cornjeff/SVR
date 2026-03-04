@@ -1329,6 +1329,24 @@
   </div>
 </div>
 
+<!-- ══════════════ CANCEL BOOKING OVERLAY ══════════════ -->
+<div class="login-overlay" id="cancelBookingOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2.5"/>
+        <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
+      </svg>
+    </div>
+    <div class="login-title" id="cancelBookingTitle">Cancel Reservation</div>
+    <div class="login-subtitle">Spruce Valley Ranch</div>
+    <p id="cancelBookingMsg" style="color:var(--text-muted);font-size:0.85rem;text-align:center;margin:0 0 1.2rem;line-height:1.6;">Are you sure you want to cancel your Trap &amp; Skeet Range reservation?</p>
+    <div class="login-error" id="cancelBookingError" style="display:none;"></div>
+    <button class="login-btn" id="cancelBookingConfirmBtn" onclick="doConfirmCancel()" style="background:#8b2020;">Yes, Cancel Reservation</button>
+    <button class="login-link" id="cancelBookingDismissBtn" onclick="doDismissCancel()">Keep my reservation</button>
+  </div>
+</div>
+
 <!-- ═══════════════════════ PAGE: HOME ═══════════════════════ -->
 <div class="page active" id="page-home">
 
@@ -3038,6 +3056,12 @@ async function rangeConfirmBook() {
       throw new Error('booking failed');
     }
 
+    // Capture ID and slot details before rangeCloseModal() nulls them out
+    const inserted = await res.json().catch(function() { return []; });
+    const bookingId = (Array.isArray(inserted) ? inserted[0] : inserted)?.id || null;
+    const bookingDate = rangePendingDate;
+    const bookingHour = rangePendingHour;
+
     sessionStorage.setItem('svr_range_name', name);
     if (email) sessionStorage.setItem('svr_range_email', email);
     btn.textContent = origText;
@@ -3050,7 +3074,7 @@ async function rangeConfirmBook() {
       fetch(sbFunctionUrl('send-email'), {
         method: 'POST',
         headers: sbFunctionHeaders(),
-        body: JSON.stringify({ type: 'booking', to: email, name: name, date: rangePendingDate, hour: rangePendingHour })
+        body: JSON.stringify({ type: 'booking', to: email, name: name, date: bookingDate, hour: bookingHour, bookingId: bookingId })
       }).catch(function() {});
     }
   } catch (e) {
@@ -3058,6 +3082,58 @@ async function rangeConfirmBook() {
     errEl.style.display = 'block';
     btn.textContent = origText;
     btn.disabled = false;
+  }
+}
+
+// ── Email cancel-link flow ─────────────────────────
+
+let pendingCancelId = null;
+
+function checkCancelParam() {
+  const params = new URLSearchParams(window.location.search);
+  const cancelId = params.get('cancel');
+  if (!cancelId) return;
+  pendingCancelId = cancelId;
+  document.getElementById('cancelBookingTitle').textContent = 'Cancel Reservation';
+  document.getElementById('cancelBookingMsg').textContent = 'Are you sure you want to cancel your Trap & Skeet Range reservation?';
+  document.getElementById('cancelBookingConfirmBtn').style.display = '';
+  document.getElementById('cancelBookingConfirmBtn').disabled = false;
+  document.getElementById('cancelBookingConfirmBtn').textContent = 'Yes, Cancel Reservation';
+  document.getElementById('cancelBookingDismissBtn').textContent = 'Keep my reservation';
+  document.getElementById('cancelBookingError').style.display = 'none';
+  document.getElementById('cancelBookingOverlay').classList.add('active');
+}
+
+function doDismissCancel() {
+  document.getElementById('cancelBookingOverlay').classList.remove('active');
+  history.replaceState(null, '', window.location.pathname);
+  pendingCancelId = null;
+}
+
+async function doConfirmCancel() {
+  if (!pendingCancelId) return;
+  const btn = document.getElementById('cancelBookingConfirmBtn');
+  const errEl = document.getElementById('cancelBookingError');
+  btn.disabled = true;
+  btn.textContent = 'Cancelling\u2026';
+  errEl.style.display = 'none';
+  try {
+    const res = await fetch(sbUrl('range_bookings?id=eq.' + pendingCancelId), {
+      method: 'DELETE',
+      headers: sbHeaders()
+    });
+    if (!res.ok) throw new Error('delete failed');
+    document.getElementById('cancelBookingTitle').textContent = 'Reservation Cancelled';
+    document.getElementById('cancelBookingMsg').textContent = 'Your Trap & Skeet Range reservation has been cancelled.';
+    btn.style.display = 'none';
+    document.getElementById('cancelBookingDismissBtn').textContent = 'Close';
+    history.replaceState(null, '', window.location.pathname);
+    pendingCancelId = null;
+  } catch(e) {
+    errEl.textContent = 'Unable to cancel. Please try again or contact the HOA.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Yes, Cancel Reservation';
   }
 }
 
@@ -3140,6 +3216,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   // Handle recovery link in URL hash
   checkRecoveryHash();
+  // Handle cancel-reservation link (?cancel=<id>)
+  checkCancelParam();
 });
 </script>
 </body>

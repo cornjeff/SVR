@@ -14,11 +14,14 @@ function formatHour(h: number) {
   return h < 12 ? `${h} AM` : `${h - 12} PM`
 }
 
-function bookingHtml(name: string, date: string, hour: number) {
+function bookingHtml(name: string, date: string, hour: number, cancelUrl: string | null) {
   const [y, m, d] = date.split('-').map(Number)
   const dateLabel = new Date(y, m - 1, d).toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
+  const cancelBtn = cancelUrl
+    ? `<p style="margin:12px 0 0;"><a href="${cancelUrl}" style="background:transparent;color:#e07070;text-decoration:none;padding:10px 22px;font-size:13px;letter-spacing:0.08em;display:inline-block;border:1px solid #e07070;">Cancel Reservation</a></p>`
+    : ''
   return `<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#f5f0e8;font-family:Georgia,serif;">
 <div style="max-width:560px;margin:40px auto;background:#0d1b2a;border:1px solid #2a3d54;">
@@ -34,8 +37,8 @@ function bookingHtml(name: string, date: string, hour: number) {
       <div style="color:#f5f0e8;font-size:16px;">${dateLabel}</div>
       <div style="color:#b8c4d0;font-size:14px;margin-top:4px;">${formatHour(hour)} &ndash; ${formatHour(hour + 1)}</div>
     </div>
-    <p style="color:#b8c4d0;font-size:14px;line-height:1.7;margin:0 0 8px;">To cancel your reservation, log into the Homeowner Portal and select your booking.</p>
     <p style="margin:24px 0 0;"><a href="${PORTAL_URL}" style="background:#c9a84c;color:#0d1b2a;text-decoration:none;padding:10px 22px;font-size:13px;letter-spacing:0.08em;display:inline-block;">Visit the Portal</a></p>
+    ${cancelBtn}
     <p style="color:#6a7f94;font-size:12px;margin:28px 0 0;">Spruce Valley Ranch &middot; Blue River, Colorado</p>
   </div>
 </div>
@@ -69,16 +72,17 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
   try {
-    const { type, to, name, date, hour, inviteLink } = await req.json()
+    const { type, to, name, date, hour, inviteLink, bookingId } = await req.json()
 
     let payload: object
 
     if (type === 'booking') {
+      const cancelUrl = bookingId ? `${PORTAL_URL}?cancel=${bookingId}` : null
       payload = {
         from: FROM,
         to: [to],
         subject: 'Range Booking Confirmed — Spruce Valley Ranch',
-        html: bookingHtml(name, date, hour),
+        html: bookingHtml(name, date, hour, cancelUrl),
       }
     } else if (type === 'welcome') {
       payload = {
