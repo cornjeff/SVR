@@ -1555,7 +1555,9 @@
     <div class="range-modal-title">Book Range Session</div>
     <div class="range-modal-sub" id="rangeModalSlotLabel"></div>
     <label class="range-modal-label">Your Name</label>
-    <input type="text" class="cms-input" id="rangeModalName" placeholder="Enter your full name" onkeydown="if(event.key==='Enter')rangeConfirmBook()">
+    <input type="text" class="cms-input" id="rangeModalName" placeholder="Enter your full name" style="margin-bottom:0.75rem;">
+    <label class="range-modal-label">Email Address <span style="color:var(--text-muted);font-size:0.72rem;">(for confirmation)</span></label>
+    <input type="email" class="cms-input" id="rangeModalEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')rangeConfirmBook()">
     <div class="range-modal-error" id="rangeModalError">Please enter your name to continue.</div>
     <div class="range-modal-actions">
       <button class="cms-btn cms-btn-primary" onclick="rangeConfirmBook()">Confirm Booking</button>
@@ -1659,6 +1661,26 @@
         <input type="text" class="cms-input" id="cmsSheetsUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
       </div>
       <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.5rem;">Don't have this yet? Follow the setup instructions included with your spreadsheet template.</p>
+    </div>
+
+    <!-- INVITE HOMEOWNER -->
+    <div class="cms-section">
+      <div class="cms-section-title">Invite Homeowner</div>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6;">
+        Send a welcome email to a new homeowner with their portal URL and password. They'll receive a branded email with everything they need to log in.
+      </p>
+      <div class="cms-row">
+        <div class="cms-field">
+          <label class="cms-label">Full Name</label>
+          <input type="text" class="cms-input" id="inviteName" placeholder="e.g. John Smith">
+        </div>
+        <div class="cms-field">
+          <label class="cms-label">Email Address</label>
+          <input type="email" class="cms-input" id="inviteEmail" placeholder="homeowner@email.com">
+        </div>
+      </div>
+      <div id="inviteStatus" style="display:none; font-size:0.78rem; margin-bottom:0.75rem; padding:0.6rem 0.9rem; border:1px solid;"></div>
+      <button class="cms-btn cms-btn-primary" onclick="sendWelcomeEmail()">Send Welcome Email</button>
     </div>
 
     <!-- DOCUMENTS -->
@@ -1832,14 +1854,14 @@ const DEFAULT_DATA = {
     { id: 7, name: 'SVR Newsletter', category: 'Newsletters', date: 'Winter 2024', url: '#' },
     { id: 8, name: 'Stable Indemnification Agreement', category: 'Waivers & Forms', date: '2025', url: '#' }
   ],
-  supabaseUrl: '',
-  supabaseKey: '',
+  supabaseUrl: 'https://qcakduegxqzemnyeuyff.supabase.co',
+  supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjYWtkdWVneHF6ZW1ueWV1eWZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNTA0MjAsImV4cCI6MjA4NzcyNjQyMH0.9S14LBk1aHr6JAgbCT6Kjz_iCGEBk3PF0llLyb70Rng',
   supabaseServiceKey: ''
 };
 
 let siteData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_DATA));
-if (!siteData.supabaseUrl) siteData.supabaseUrl = '';
-if (!siteData.supabaseKey) siteData.supabaseKey = '';
+if (!siteData.supabaseUrl) siteData.supabaseUrl = DEFAULT_DATA.supabaseUrl;
+if (!siteData.supabaseKey) siteData.supabaseKey = DEFAULT_DATA.supabaseKey;
 if (!siteData.supabaseServiceKey) siteData.supabaseServiceKey = '';
 
 function save() {
@@ -2556,6 +2578,73 @@ function removeBoardMember(id) {
   renderCMS();
 }
 
+async function sendWelcomeEmail() {
+  const name = document.getElementById('inviteName').value.trim();
+  const email = document.getElementById('inviteEmail').value.trim();
+  const statusEl = document.getElementById('inviteStatus');
+
+  if (!name || !email) {
+    statusEl.textContent = 'Please enter both a name and email address.';
+    statusEl.style.color = '#e07070';
+    statusEl.style.borderColor = '#8b3a3a';
+    statusEl.style.background = '#1a0a0a';
+    statusEl.style.display = 'block';
+    return;
+  }
+
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) {
+    statusEl.textContent = 'Supabase credentials not configured.';
+    statusEl.style.color = '#e07070';
+    statusEl.style.borderColor = '#8b3a3a';
+    statusEl.style.background = '#1a0a0a';
+    statusEl.style.display = 'block';
+    return;
+  }
+
+  const password = siteData.adminPassword || '';
+  if (!password) {
+    statusEl.textContent = 'No portal password is set. Please set one in Settings first.';
+    statusEl.style.color = '#e07070';
+    statusEl.style.borderColor = '#8b3a3a';
+    statusEl.style.background = '#1a0a0a';
+    statusEl.style.display = 'block';
+    return;
+  }
+
+  statusEl.textContent = 'Sending…';
+  statusEl.style.color = 'var(--gold-dim)';
+  statusEl.style.borderColor = 'var(--navy-border)';
+  statusEl.style.background = 'var(--navy)';
+  statusEl.style.display = 'block';
+
+  try {
+    const r = await fetch(sbFunctionUrl('send-email'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+      body: JSON.stringify({ type: 'welcome', to: email, name: name, password: password })
+    });
+    if (r.ok) {
+      statusEl.textContent = 'Welcome email sent to ' + email;
+      statusEl.style.color = '#7ec87e';
+      statusEl.style.borderColor = '#2a5a2a';
+      statusEl.style.background = '#0a1a0a';
+      document.getElementById('inviteName').value = '';
+      document.getElementById('inviteEmail').value = '';
+    } else {
+      const d = await r.json().catch(() => ({}));
+      statusEl.textContent = 'Error: ' + (d.message || d.error || r.status);
+      statusEl.style.color = '#e07070';
+      statusEl.style.borderColor = '#8b3a3a';
+      statusEl.style.background = '#1a0a0a';
+    }
+  } catch (err) {
+    statusEl.textContent = 'Network error — could not send email.';
+    statusEl.style.color = '#e07070';
+    statusEl.style.borderColor = '#8b3a3a';
+    statusEl.style.background = '#1a0a0a';
+  }
+}
+
 function addDocument() {
   const name = document.getElementById('newDocName').value.trim();
   const category = document.getElementById('newDocCategory').value;
@@ -2675,6 +2764,10 @@ function sbHeaders() {
 
 function sbUrl(path) {
   return (siteData.supabaseUrl || '').replace(/\/$/, '') + '/rest/v1/' + path;
+}
+
+function sbFunctionUrl(fnName) {
+  return (siteData.supabaseUrl || '').replace(/\/$/, '') + '/functions/v1/' + fnName;
 }
 
 async function sbFetchBookings(startDateStr, endDateStr) {
@@ -2838,10 +2931,11 @@ function rangeOpenModal(dateStr, hour) {
   const nameInput = document.getElementById('rangeModalName');
   const saved = sessionStorage.getItem('svr_range_name') || '';
   nameInput.value = saved;
+  document.getElementById('rangeModalEmail').value = sessionStorage.getItem('svr_range_email') || '';
   document.getElementById('rangeModalError').style.display = 'none';
   document.getElementById('rangeModalError').textContent = 'Please enter your name to continue.';
   document.getElementById('rangeBookingModal').classList.add('active');
-  setTimeout(function() { nameInput.focus(); if (saved) nameInput.select(); }, 100);
+  setTimeout(function() { if (saved) document.getElementById('rangeModalEmail').focus(); else nameInput.focus(); }, 100);
 }
 
 function rangeCloseModal() {
@@ -2852,8 +2946,11 @@ function rangeCloseModal() {
 
 async function rangeConfirmBook() {
   const name = document.getElementById('rangeModalName').value.trim();
+  const email = document.getElementById('rangeModalEmail').value.trim();
+  const errEl = document.getElementById('rangeModalError');
   if (!name) {
-    document.getElementById('rangeModalError').style.display = 'block';
+    errEl.textContent = 'Please enter your name to continue.';
+    errEl.style.display = 'block';
     document.getElementById('rangeModalName').focus();
     return;
   }
@@ -2868,13 +2965,12 @@ async function rangeConfirmBook() {
     const res = await fetch(sbUrl('range_bookings'), {
       method: 'POST',
       headers: sbHeaders(),
-      body: JSON.stringify({ date: rangePendingDate, hour: rangePendingHour, name: name })
+      body: JSON.stringify({ date: rangePendingDate, hour: rangePendingHour, name: name, email: email || null })
     });
 
     if (res.status === 409 || res.status === 23505) {
-      // Unique constraint violation — slot taken
-      document.getElementById('rangeModalError').textContent = 'This slot was just booked. Please choose another time.';
-      document.getElementById('rangeModalError').style.display = 'block';
+      errEl.textContent = 'This slot was just booked. Please choose another time.';
+      errEl.style.display = 'block';
       btn.textContent = origText;
       btn.disabled = false;
       renderRangeScheduler();
@@ -2882,10 +2978,9 @@ async function rangeConfirmBook() {
     }
     if (!res.ok) {
       const body = await res.json().catch(function() { return {}; });
-      // Supabase returns 400 with code 23505 for unique violations
       if (body.code === '23505') {
-        document.getElementById('rangeModalError').textContent = 'This slot was just booked. Please choose another time.';
-        document.getElementById('rangeModalError').style.display = 'block';
+        errEl.textContent = 'This slot was just booked. Please choose another time.';
+        errEl.style.display = 'block';
         btn.textContent = origText;
         btn.disabled = false;
         renderRangeScheduler();
@@ -2895,11 +2990,21 @@ async function rangeConfirmBook() {
     }
 
     sessionStorage.setItem('svr_range_name', name);
+    if (email) sessionStorage.setItem('svr_range_email', email);
     rangeCloseModal();
     renderRangeScheduler();
+
+    // Fire confirmation email (best-effort, don't block UI)
+    if (email) {
+      fetch(sbFunctionUrl('send-email'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+        body: JSON.stringify({ type: 'booking', to: email, name: name, date: rangePendingDate, hour: rangePendingHour })
+      }).catch(function() {});
+    }
   } catch (e) {
-    document.getElementById('rangeModalError').textContent = 'Unable to complete booking. Please try again.';
-    document.getElementById('rangeModalError').style.display = 'block';
+    errEl.textContent = 'Unable to complete booking. Please try again.';
+    errEl.style.display = 'block';
     btn.textContent = origText;
     btn.disabled = false;
   }
