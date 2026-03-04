@@ -1746,7 +1746,7 @@ create policy "public delete" on range_bookings for delete using (true);</pre>
     <div class="cms-section">
       <div class="cms-section-title">Homeowner Accounts</div>
       <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6;">
-        Enter a name and email below, then click <strong>Send Invite</strong>. The homeowner will receive two emails: a branded welcome email from Spruce Valley Ranch, and a separate link from Supabase to set their password. The Service Role Key (above) is required.
+        Enter a name and email below, then click <strong>Send Invite</strong>. The homeowner will receive a single branded welcome email from Spruce Valley Ranch with a button to set their password and access the portal. The Service Role Key (above) is required.
       </p>
       <div class="cms-row" style="align-items:flex-end; gap:0.8rem;">
         <div class="cms-field">
@@ -2087,36 +2087,39 @@ async function inviteHomeowner() {
   const btn = document.getElementById('inviteBtn');
   btn.disabled = true;
   try {
-    const res = await fetch(sbAuthUrl('admin/users'), {
+    // Generate invite link — creates the Supabase user WITHOUT sending any email,
+    // and returns an action_link we can embed in our own branded email.
+    const res = await fetch(sbAuthUrl('admin/generate_link'), {
       method: 'POST',
       headers: sbServiceHeaders(),
-      body: JSON.stringify({ email, email_confirm: false, invite_user_by_email: true })
+      body: JSON.stringify({
+        type: 'invite',
+        email: email,
+        options: { redirect_to: 'https://cornjeff.github.io/SVR/' }
+      })
     });
     if (!res.ok) {
-      // Fall back to invite endpoint
-      const res2 = await fetch(sbAuthUrl('invite'), {
-        method: 'POST',
-        headers: sbServiceHeaders(),
-        body: JSON.stringify({ email })
-      });
-      if (!res2.ok) {
-        const d = await res2.json();
-        msg.style.color = '#e07070';
-        msg.textContent = d.msg || d.error_description || 'Failed to send invite.';
-        btn.disabled = false;
-        return;
-      }
+      const d = await res.json();
+      msg.style.color = '#e07070';
+      msg.textContent = d.msg || d.error_description || d.message || 'Failed to create account.';
+      btn.disabled = false;
+      return;
     }
-    // Supabase invite succeeded — fire branded welcome email (best-effort)
+    const linkData = await res.json();
+    const inviteLink = linkData.action_link;
+
+    // Send single branded welcome email with the password-set link embedded
     if (siteData.supabaseKey) {
-      fetch(sbFunctionUrl('send-email'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
-        body: JSON.stringify({ type: 'welcome', to: email, name: name || email })
-      }).catch(function() {});
+      try {
+        await fetch(sbFunctionUrl('send-email'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+          body: JSON.stringify({ type: 'welcome', to: email, name: name || email, inviteLink: inviteLink })
+        });
+      } catch(e) {}
     }
     msg.style.color = 'var(--gold)';
-    msg.textContent = 'Invite sent to ' + email + '. A branded welcome email has also been dispatched.';
+    msg.textContent = 'Welcome email sent to ' + email + ' with a link to set their password.';
     document.getElementById('inviteName').value = '';
     document.getElementById('inviteEmail').value = '';
     renderAccountsList();
