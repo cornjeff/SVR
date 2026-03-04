@@ -2148,7 +2148,7 @@ async function inviteHomeowner() {
       try {
         await fetch(sbFunctionUrl('send-email'), {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+          headers: sbFunctionHeaders(),
           body: JSON.stringify({ type: 'welcome', to: email, name: name || email, inviteLink: inviteLink })
         });
       } catch(e) {}
@@ -2269,7 +2269,7 @@ async function resendInvite(btn) {
     }
     const emailRes = await fetch(sbFunctionUrl('send-email'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+      headers: sbFunctionHeaders(),
       body: JSON.stringify({ type: 'welcome', to: email, name: email, inviteLink: inviteLink })
     });
     if (!emailRes.ok) {
@@ -2811,6 +2811,14 @@ function sbFunctionUrl(fnName) {
   return (siteData.supabaseUrl || '').replace(/\/$/, '') + '/functions/v1/' + fnName;
 }
 
+function sbFunctionHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'apikey': siteData.supabaseKey,
+    'Authorization': 'Bearer ' + siteData.supabaseKey,
+  };
+}
+
 async function sbFetchBookings(startDateStr, endDateStr) {
   if (!siteData.supabaseUrl || !siteData.supabaseKey) return [];
   try {
@@ -3041,7 +3049,7 @@ async function rangeConfirmBook() {
     if (email) {
       fetch(sbFunctionUrl('send-email'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+        headers: sbFunctionHeaders(),
         body: JSON.stringify({ type: 'booking', to: email, name: name, date: rangePendingDate, hour: rangePendingHour })
       }).catch(function() {});
     }
