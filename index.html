@@ -2043,15 +2043,16 @@ async function doUpdatePassword() {
       err.style.display = 'block';
       return;
     }
-    document.getElementById('updatePasswordOverlay').classList.remove('active');
+    const userData = await res.json();
+    // Auto-login: the access_token from the invite/recovery link is still valid
+    // after setting the password — use it to open the portal directly.
+    sessionSave({ access_token: recoveryToken, user: userData });
+    isLoggedIn = true;
     recoveryToken = null;
-    // Clear hash so a refresh doesn't re-trigger the form
     history.replaceState(null, '', window.location.pathname + window.location.search);
-    showLogin();
-    const signinErr = document.getElementById('loginError');
-    signinErr.textContent = 'Password updated! Please sign in.';
-    signinErr.style.color = 'var(--gold)';
-    signinErr.style.display = 'block';
+    document.getElementById('updatePasswordOverlay').classList.remove('active');
+    showPage('members');
+    renderPortal();
   } catch(e) {
     err.textContent = 'Network error. Please try again.';
     err.style.display = 'block';
@@ -2062,7 +2063,7 @@ function checkRecoveryHash() {
   const hash = window.location.hash.slice(1);
   if (!hash) return;
   const params = Object.fromEntries(hash.split('&').map(p => p.split('=')));
-  if (params.type === 'recovery' && params.access_token) {
+  if ((params.type === 'recovery' || params.type === 'invite') && params.access_token) {
     recoveryToken = decodeURIComponent(params.access_token);
     document.getElementById('newPasswordInput').value = '';
     document.getElementById('confirmPasswordInput').value = '';
@@ -2211,8 +2212,9 @@ async function resendInvite(btn) {
   msgEl.style.color = 'var(--gold-dim)';
   msgEl.style.display = 'block';
   try {
-    // Confirmed users get a password-reset link; pending users get a fresh invite link
-    const linkType = confirmed ? 'recovery' : 'invite';
+    // Always use 'recovery' — works for both pending and confirmed users,
+    // and avoids Supabase's "user already invited" error on resend.
+    const linkType = 'recovery';
     const res = await fetch(sbAuthUrl('admin/generate_link'), {
       method: 'POST',
       headers: sbServiceHeaders(),

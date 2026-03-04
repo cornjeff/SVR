@@ -54,18 +54,11 @@ function welcomeHtml(name: string, inviteLink: string) {
     <p style="color:#b8c4d0;font-size:15px;line-height:1.7;margin:0 0 24px;">Welcome, ${name}.</p>
     <p style="color:#b8c4d0;font-size:15px;line-height:1.7;margin:0 0 24px;">Your access to the Spruce Valley Ranch Homeowner Portal has been set up. You can view community announcements, the directory, HOA documents, financials, and reserve time at the Trap &amp; Skeet Range.</p>
     <div style="background:#162032;border:1px solid #2a3d54;padding:20px 24px;margin-bottom:24px;">
-      <div style="color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;">Getting Started</div>
-      <div style="margin-bottom:16px;">
-        <div style="color:#6a7f94;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Step 1 — Set your password</div>
-        <div style="color:#b8c4d0;font-size:14px;line-height:1.6;margin-bottom:10px;">Click the button below to choose your password. This link expires in 24 hours.</div>
-        <a href="${inviteLink}" style="background:#c9a84c;color:#0d1b2a;text-decoration:none;padding:10px 22px;font-size:13px;letter-spacing:0.08em;display:inline-block;">Set Your Password</a>
-      </div>
-      <div>
-        <div style="color:#6a7f94;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Step 2 — Sign in to the portal</div>
-        <a href="${PORTAL_URL}" style="color:#c9a84c;font-size:14px;text-decoration:none;">${PORTAL_URL}</a>
-      </div>
+      <div style="color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;">Access the Portal</div>
+      <div style="color:#b8c4d0;font-size:14px;line-height:1.6;margin-bottom:16px;">Click the button below to choose your password. You'll be taken directly into the Homeowner Portal — no second step needed. This link expires in 24 hours.</div>
+      <a href="${inviteLink}" style="background:#c9a84c;color:#0d1b2a;text-decoration:none;padding:10px 22px;font-size:13px;letter-spacing:0.08em;display:inline-block;">Set Your Password &amp; Enter Portal</a>
     </div>
-    <p style="color:#b8c4d0;font-size:14px;line-height:1.7;margin:0;">Once your password is set, sign in at the portal with your email address and chosen password.</p>
+    <p style="color:#b8c4d0;font-size:14px;line-height:1.7;margin:0;">After setting your password you'll have immediate access to announcements, the directory, HOA documents, financials, and the Trap &amp; Skeet Range scheduler.</p>
     <p style="color:#6a7f94;font-size:12px;margin:28px 0 0;">Spruce Valley Ranch &middot; Blue River, Colorado</p>
   </div>
 </div>
