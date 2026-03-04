@@ -2165,13 +2165,21 @@ async function renderAccountsList() {
     }
     el.innerHTML = users.map(u => {
       const label = u.email || u.id;
-      const status = u.confirmed_at ? 'Active' : 'Invite pending';
-      return '<div class="cms-item-row">' +
+      const confirmed = !!u.confirmed_at;
+      const status = confirmed ? 'Active' : 'Invite pending';
+      const statusColor = confirmed ? '#7ec87e' : '#c9a84c';
+      return '<div class="cms-item-row" id="account-row-' + escHtml(u.id) + '">' +
         '<div class="cms-item-info">' +
           '<div>' + escHtml(label) + '</div>' +
-          '<div class="cms-item-sub">' + status + '</div>' +
+          '<div class="cms-item-sub" style="color:' + statusColor + ';">' + status + '</div>' +
+          '<div id="resend-msg-' + escHtml(u.id) + '" style="font-size:0.72rem;margin-top:0.25rem;display:none;"></div>' +
         '</div>' +
         '<div class="cms-actions">' +
+          '<button class="cms-btn cms-btn-secondary" ' +
+            'data-email="' + escHtml(u.email || '') + '" ' +
+            'data-uid="' + escHtml(u.id) + '" ' +
+            'data-confirmed="' + confirmed + '" ' +
+            'onclick="resendInvite(this)">Resend</button>' +
           '<button class="cms-btn cms-btn-danger" onclick="removeHomeowner(\'' + escHtml(u.id) + '\')">Remove</button>' +
         '</div>' +
       '</div>';
@@ -2191,6 +2199,62 @@ async function removeHomeowner(uid) {
     if (!res.ok) { alert('Could not remove account.'); return; }
     renderAccountsList();
   } catch(e) { alert('Network error.'); }
+}
+
+async function resendInvite(btn) {
+  const email = btn.dataset.email;
+  const uid = btn.dataset.uid;
+  const confirmed = btn.dataset.confirmed === 'true';
+  const msgEl = document.getElementById('resend-msg-' + uid);
+  btn.disabled = true;
+  msgEl.textContent = 'Sending…';
+  msgEl.style.color = 'var(--gold-dim)';
+  msgEl.style.display = 'block';
+  try {
+    // Confirmed users get a password-reset link; pending users get a fresh invite link
+    const linkType = confirmed ? 'recovery' : 'invite';
+    const res = await fetch(sbAuthUrl('admin/generate_link'), {
+      method: 'POST',
+      headers: sbServiceHeaders(),
+      body: JSON.stringify({
+        type: linkType,
+        email: email,
+        redirect_to: 'https://cornjeff.github.io/SVR/'
+      })
+    });
+    const linkData = await res.json();
+    console.log('resendInvite generate_link response:', JSON.stringify(linkData));
+    if (!res.ok) {
+      msgEl.textContent = linkData.msg || linkData.error_description || linkData.message || linkData.error || 'Failed.';
+      msgEl.style.color = '#e07070';
+      btn.disabled = false;
+      return;
+    }
+    const inviteLink = linkData.action_link
+      || (linkData.data && linkData.data.properties && linkData.data.properties.action_link)
+      || (linkData.properties && linkData.properties.action_link);
+    if (!inviteLink) {
+      msgEl.textContent = 'Link missing — check console.';
+      msgEl.style.color = '#e07070';
+      btn.disabled = false;
+      return;
+    }
+    if (siteData.supabaseKey) {
+      await fetch(sbFunctionUrl('send-email'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+        body: JSON.stringify({ type: 'welcome', to: email, name: email, inviteLink: inviteLink })
+      }).catch(function() {});
+    }
+    msgEl.textContent = '✓ Email sent';
+    msgEl.style.color = '#7ec87e';
+    btn.disabled = false;
+    setTimeout(function() { if (msgEl) msgEl.style.display = 'none'; }, 4000);
+  } catch(e) {
+    msgEl.textContent = 'Network error.';
+    msgEl.style.color = '#e07070';
+    btn.disabled = false;
+  }
 }
 
 // ═══════════════════════════════════════════════════
