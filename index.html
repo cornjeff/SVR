@@ -2773,7 +2773,7 @@ function changeAdminPassword() {
 //
 // Then add Project URL + anon key in Site Admin → Range Bookings.
 
-const RANGE_HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+const RANGE_HOURS = [8, 10, 12, 14, 16];
 let rangeViewStart = null;
 let rangePendingDate = null;
 let rangePendingHour = null;
@@ -2859,7 +2859,7 @@ async function renderRangeScheduler() {
   const HEADER =
     '<div style="margin-bottom:1.5rem;">' +
       '<div style="font-family:\'Cinzel\',serif; font-size:1.05rem; color:var(--cream); letter-spacing:0.08em; margin-bottom:0.4rem;">Trap &amp; Skeet Range</div>' +
-      '<div style="font-size:0.75rem; color:var(--text-muted); letter-spacing:0.05em; line-height:1.7;">Reserve your time at the range &nbsp;&middot;&nbsp; 1-hour sessions &nbsp;&middot;&nbsp; Exclusive per slot &nbsp;&middot;&nbsp; Book up to 30 days ahead &nbsp;&middot;&nbsp; 8 AM &ndash; 6 PM daily</div>' +
+      '<div style="font-size:0.75rem; color:var(--text-muted); letter-spacing:0.05em; line-height:1.7;">Reserve your time at the range &nbsp;&middot;&nbsp; 2-hour sessions &nbsp;&middot;&nbsp; Exclusive per slot &nbsp;&middot;&nbsp; Book up to 30 days ahead &nbsp;&middot;&nbsp; 8 AM &ndash; 6 PM daily</div>' +
     '</div>';
 
   if (!siteData.supabaseUrl || !siteData.supabaseKey) {
@@ -2915,15 +2915,16 @@ async function renderRangeScheduler() {
       const slotDt = new Date(day); slotDt.setHours(hour, 0, 0, 0);
       const isPast = slotDt <= new Date();
 
+      const slotLabel = rangeFormatHour(hour) + ' \u2013 ' + rangeFormatHour(hour + 2);
       if (isPast || isBeyond) {
         dayHtml += '<div class="range-slot past">';
-        dayHtml += '<div class="range-slot-time">' + rangeFormatHour(hour) + '</div>';
+        dayHtml += '<div class="range-slot-time">' + slotLabel + '</div>';
         if (booking) dayHtml += '<div class="range-slot-name">' + escHtml(booking.name) + '</div>';
         dayHtml += '</div>';
       } else if (booking) {
         const isMine = myName && booking.name.toLowerCase() === myName.toLowerCase();
         dayHtml += '<div class="range-slot ' + (isMine ? 'booked-mine' : 'booked-other') + '">';
-        dayHtml += '<div class="range-slot-time">' + rangeFormatHour(hour) + '</div>';
+        dayHtml += '<div class="range-slot-time">' + slotLabel + '</div>';
         dayHtml += '<div class="range-slot-name">' + escHtml(booking.name) + '</div>';
         if (isMine) {
           dayHtml += '<button class="range-cancel-btn" onclick="rangeCancelSlot(' + booking.id + ')">&#x2715; Cancel</button>';
@@ -2931,7 +2932,7 @@ async function renderRangeScheduler() {
         dayHtml += '</div>';
       } else {
         dayHtml += '<div class="range-slot available" onclick="rangeOpenModal(\'' + dateStr + '\',' + hour + ')">';
-        dayHtml += '<div class="range-slot-time">' + rangeFormatHour(hour) + '</div>';
+        dayHtml += '<div class="range-slot-time">' + slotLabel + '</div>';
         dayHtml += '<button class="range-book-btn">Book</button>';
         dayHtml += '</div>';
       }
@@ -2959,7 +2960,7 @@ async function renderRangeScheduler() {
         const d = rangeParseDateStr(b.date);
         const label = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
         myHtml += '<div class="range-booking-item">';
-        myHtml += '<div><div class="range-booking-info">' + label + ' &middot; ' + rangeFormatHour(b.hour) + ' &ndash; ' + rangeFormatHour(b.hour + 1) + '</div>';
+        myHtml += '<div><div class="range-booking-info">' + label + ' &middot; ' + rangeFormatHour(b.hour) + ' &ndash; ' + rangeFormatHour(b.hour + 2) + '</div>';
         myHtml += '<div class="range-booking-meta">Reserved by ' + escHtml(b.name) + '</div></div>';
         myHtml += '<button class="range-cancel-btn" onclick="rangeCancelSlot(' + b.id + ')">Cancel</button>';
         myHtml += '</div>';
@@ -2994,7 +2995,7 @@ function rangeOpenModal(dateStr, hour) {
   const d = rangeParseDateStr(dateStr);
   const label = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   document.getElementById('rangeModalSlotLabel').textContent =
-    label + ' \u00b7 ' + rangeFormatHour(hour) + ' \u2013 ' + rangeFormatHour(hour + 1);
+    label + ' \u00b7 ' + rangeFormatHour(hour) + ' \u2013 ' + rangeFormatHour(hour + 2);
   const nameInput = document.getElementById('rangeModalName');
   const saved = sessionStorage.getItem('svr_range_name') || '';
   nameInput.value = saved;
@@ -3190,7 +3191,7 @@ async function renderCMSRangeBookings() {
     return '<div class="cms-item-row">' +
       '<div class="cms-item-info">' +
         '<div>' + escHtml(b.name) + '</div>' +
-        '<div class="cms-item-sub">' + label + ' &middot; ' + rangeFormatHour(b.hour) + ' &ndash; ' + rangeFormatHour(b.hour + 1) + '</div>' +
+        '<div class="cms-item-sub">' + label + ' &middot; ' + rangeFormatHour(b.hour) + ' &ndash; ' + rangeFormatHour(b.hour + 2) + '</div>' +
       '</div>' +
       '<div class="cms-actions">' +
         '<button class="cms-btn cms-btn-danger" onclick="rangeCancelSlot(' + b.id + ').then(renderCMSRangeBookings)">Remove</button>' +

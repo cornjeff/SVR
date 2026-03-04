@@ -35,7 +35,7 @@ function bookingHtml(name: string, date: string, hour: number, cancelUrl: string
     <div style="background:#162032;border:1px solid #2a3d54;padding:20px 24px;margin-bottom:24px;">
       <div style="color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;">Reservation Details</div>
       <div style="color:#f5f0e8;font-size:16px;">${dateLabel}</div>
-      <div style="color:#b8c4d0;font-size:14px;margin-top:4px;">${formatHour(hour)} &ndash; ${formatHour(hour + 1)}</div>
+      <div style="color:#b8c4d0;font-size:14px;margin-top:4px;">${formatHour(hour)} &ndash; ${formatHour(hour + 2)}</div>
     </div>
     <p style="margin:24px 0 0;"><a href="${PORTAL_URL}" style="background:#c9a84c;color:#0d1b2a;text-decoration:none;padding:10px 22px;font-size:13px;letter-spacing:0.08em;display:inline-block;">Visit the Portal</a></p>
     ${cancelBtn}
