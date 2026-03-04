@@ -2089,24 +2089,38 @@ async function inviteHomeowner() {
   try {
     // Generate invite link — creates the Supabase user WITHOUT sending any email,
     // and returns an action_link we can embed in our own branded email.
+    // Note: redirect_to is top-level for the raw REST API (not nested under options).
     const res = await fetch(sbAuthUrl('admin/generate_link'), {
       method: 'POST',
       headers: sbServiceHeaders(),
       body: JSON.stringify({
         type: 'invite',
         email: email,
-        options: { redirect_to: 'https://cornjeff.github.io/SVR/' }
+        redirect_to: 'https://cornjeff.github.io/SVR/'
       })
     });
+    const linkData = await res.json();
+    console.log('generate_link response:', JSON.stringify(linkData));
     if (!res.ok) {
-      const d = await res.json();
       msg.style.color = '#e07070';
-      msg.textContent = d.msg || d.error_description || d.message || 'Failed to create account.';
+      msg.textContent = linkData.msg || linkData.error_description || linkData.message || linkData.error || 'Failed to create account.';
       btn.disabled = false;
       return;
     }
-    const linkData = await res.json();
-    const inviteLink = linkData.action_link;
+    // Handle multiple possible response shapes across Supabase versions:
+    //   v1 flat REST:  { action_link: "...", ... }
+    //   v2 wrapped:    { data: { properties: { action_link: "..." } }, user: {} }
+    //   properties:    { properties: { action_link: "..." }, user: {} }
+    const inviteLink = linkData.action_link
+      || (linkData.data && linkData.data.properties && linkData.data.properties.action_link)
+      || (linkData.properties && linkData.properties.action_link);
+
+    if (!inviteLink) {
+      msg.style.color = '#e07070';
+      msg.textContent = 'Account created but could not get invite link. Check browser console for API response.';
+      btn.disabled = false;
+      return;
+    }
 
     // Send single branded welcome email with the password-set link embedded
     if (siteData.supabaseKey) {
