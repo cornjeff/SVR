@@ -2261,12 +2261,23 @@ async function resendInvite(btn) {
       btn.disabled = false;
       return;
     }
-    if (siteData.supabaseKey) {
-      await fetch(sbFunctionUrl('send-email'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
-        body: JSON.stringify({ type: 'welcome', to: email, name: email, inviteLink: inviteLink })
-      }).catch(function() {});
+    if (!siteData.supabaseKey) {
+      msgEl.textContent = 'Missing anon key — check CMS settings.';
+      msgEl.style.color = '#e07070';
+      btn.disabled = false;
+      return;
+    }
+    const emailRes = await fetch(sbFunctionUrl('send-email'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': siteData.supabaseKey },
+      body: JSON.stringify({ type: 'welcome', to: email, name: email, inviteLink: inviteLink })
+    });
+    if (!emailRes.ok) {
+      const emailErr = await emailRes.json().catch(function() { return {}; });
+      msgEl.textContent = 'Email failed: ' + (emailErr.message || emailErr.error || emailRes.status);
+      msgEl.style.color = '#e07070';
+      btn.disabled = false;
+      return;
     }
     msgEl.textContent = '✓ Email sent';
     msgEl.style.color = '#7ec87e';
