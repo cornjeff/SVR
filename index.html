@@ -477,6 +477,26 @@
     width: 18px; height: 18px; font-size: 0.6rem; cursor: pointer;
     display: flex; align-items: center; justify-content: center; line-height: 1;
   }
+  /* Document drop zone */
+  .doc-drop-zone {
+    border: 2px dashed var(--navy-border);
+    border-radius: 4px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    line-height: 1.5;
+    user-select: none;
+  }
+  .doc-drop-zone:hover, .doc-drop-zone.dragover {
+    border-color: var(--gold-dim);
+    background: rgba(201, 168, 76, 0.05);
+    color: var(--cream-dim);
+  }
+  .doc-drop-zone.uploading { border-color: var(--gold-dim); color: var(--gold-dim); pointer-events: none; }
+  .doc-drop-zone.uploaded  { border-color: #6db86d; color: #6db86d; }
 
   /* ─── CONTACT PAGE ─── */
   .contact-grid {
@@ -1792,8 +1812,18 @@
       <div class="cms-section-title">HOA Documents</div>
       <div id="cms-docs-list" style="margin-bottom:1rem;"></div>
       <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
-        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Document Link</div>
-        <div class="cms-row">
+        <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Document</div>
+        <!-- Drop zone -->
+        <div id="docDropZone" class="doc-drop-zone"
+          onclick="document.getElementById('docFileInput').click()"
+          ondragover="docDragOver(event)"
+          ondragleave="docDragLeave(event)"
+          ondrop="docDrop(event)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="display:inline-block;vertical-align:middle;margin-right:0.4rem;opacity:0.6;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span id="docDropZoneText">Drag &amp; drop a PDF or file here, or <span style="color:var(--gold);text-decoration:underline;">click to browse</span></span>
+        </div>
+        <input type="file" id="docFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv" style="display:none;" onchange="docFileSelected(this)">
+        <div class="cms-row" style="margin-top:0.75rem;">
           <div class="cms-field">
             <label class="cms-label">Document Name</label>
             <input type="text" class="cms-input" id="newDocName" placeholder="e.g. Amended Bylaws 2023">
@@ -1805,7 +1835,7 @@
               <option value="Meeting Minutes">Meeting Minutes</option>
               <option value="Financials">Financials</option>
               <option value="Newsletters">Newsletters</option>
-              <option value="Waivers & Forms">Waivers & Forms</option>
+              <option value="Waivers & Forms">Waivers &amp; Forms</option>
             </select>
           </div>
         </div>
@@ -1815,7 +1845,7 @@
             <input type="text" class="cms-input" id="newDocDate" placeholder="e.g. August 2023">
           </div>
           <div class="cms-field">
-            <label class="cms-label">URL / Link (Google Drive, Dropbox, etc.)</label>
+            <label class="cms-label">Or paste a URL (Google Drive, Dropbox, etc.)</label>
             <input type="text" class="cms-input" id="newDocUrl" placeholder="https://...">
           </div>
         </div>
@@ -3260,6 +3290,88 @@ async function removeBoardMember(id) {
   renderCMSSection('board');
 }
 
+// ─── Document file upload / drag-drop ────────────────────────────────────────
+
+function docDragOver(e) {
+  e.preventDefault();
+  document.getElementById('docDropZone').classList.add('dragover');
+}
+function docDragLeave(e) {
+  document.getElementById('docDropZone').classList.remove('dragover');
+}
+function docDrop(e) {
+  e.preventDefault();
+  document.getElementById('docDropZone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) docHandleFile(file);
+}
+function docFileSelected(input) {
+  const file = input.files[0];
+  input.value = '';
+  if (file) docHandleFile(file);
+}
+
+async function docHandleFile(file) {
+  if (!siteData.supabaseUrl || !siteData.supabaseServiceKey) {
+    alert('Add your Supabase Service Role Key in Settings to enable file uploads.');
+    return;
+  }
+  const zone = document.getElementById('docDropZone');
+  const zoneText = document.getElementById('docDropZoneText');
+  zone.classList.remove('uploaded');
+  zone.classList.add('uploading');
+  zoneText.textContent = 'Uploading ' + file.name + '\u2026';
+  try {
+    const url = await uploadDocumentFile(file);
+    document.getElementById('newDocUrl').value = url;
+    // Auto-fill name from filename if field is empty
+    const nameInput = document.getElementById('newDocName');
+    if (!nameInput.value.trim()) {
+      nameInput.value = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+    }
+    zone.classList.remove('uploading');
+    zone.classList.add('uploaded');
+    zoneText.innerHTML = '\u2713 <strong>' + escHtml(file.name) + '</strong> uploaded — fill in details and click Add Document';
+  } catch(e) {
+    zone.classList.remove('uploading');
+    zoneText.innerHTML = 'Drag &amp; drop a PDF or file here, or <span style="color:var(--gold);text-decoration:underline;">click to browse</span>';
+    alert('Upload failed: ' + e.message);
+  }
+}
+
+async function uploadDocumentFile(file) {
+  if (!siteData.supabaseUrl || !siteData.supabaseServiceKey) throw new Error('Service key required');
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const path = 'documents/' + Date.now() + '-' + safeName;
+  const uploadUrl = siteData.supabaseUrl.replace(/\/$/, '') + '/storage/v1/object/site-assets/' + path;
+  const res = await fetch(uploadUrl, {
+    method: 'POST',
+    headers: {
+      'apikey': siteData.supabaseServiceKey,
+      'Authorization': 'Bearer ' + siteData.supabaseServiceKey,
+      'Content-Type': file.type || 'application/octet-stream',
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(function() { return {}; });
+    const msg = err.message || 'Upload failed';
+    throw new Error(msg.toLowerCase().includes('bucket') ? 'Bucket not found — create a public bucket named "site-assets" in Supabase Storage' : msg);
+  }
+  return siteData.supabaseUrl.replace(/\/$/, '') + '/storage/v1/object/public/site-assets/' + path;
+}
+
+function docResetDropZone() {
+  const zone = document.getElementById('docDropZone');
+  const zoneText = document.getElementById('docDropZoneText');
+  if (!zone) return;
+  zone.classList.remove('uploading', 'uploaded', 'dragover');
+  zoneText.innerHTML = 'Drag &amp; drop a PDF or file here, or <span style="color:var(--gold);text-decoration:underline;">click to browse</span>';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function addDocument() {
   const name = document.getElementById('newDocName').value.trim();
   const category = document.getElementById('newDocCategory').value;
@@ -3289,6 +3401,7 @@ async function addDocument() {
   document.getElementById('newDocName').value = '';
   document.getElementById('newDocDate').value = '';
   document.getElementById('newDocUrl').value = '';
+  docResetDropZone();
   renderDocs();
   renderCMSSection('docs');
 }
