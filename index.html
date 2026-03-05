@@ -413,6 +413,71 @@
     font-weight: 300;
   }
 
+  /* ─── AMENITY CAROUSEL ─── */
+  .carousel-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 4000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .carousel-overlay.active { opacity: 1; pointer-events: all; }
+  .carousel-box {
+    position: relative;
+    max-width: 920px; width: 96vw;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .carousel-close {
+    position: absolute; top: -44px; right: 0;
+    background: none; border: none; color: var(--cream);
+    font-size: 1.6rem; cursor: pointer; opacity: 0.65; transition: opacity 0.15s; line-height: 1;
+  }
+  .carousel-close:hover { opacity: 1; }
+  .carousel-title {
+    font-family: 'Cinzel', serif; font-size: 0.8rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.9rem;
+  }
+  .carousel-img-wrap {
+    width: 100%; background: #000;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 280px; position: relative;
+  }
+  .carousel-img { max-width: 100%; max-height: 68vh; display: block; object-fit: contain; }
+  .carousel-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.6); color: var(--cream-dim);
+    font-size: 0.78rem; padding: 0.45rem 1rem; text-align: center;
+  }
+  .carousel-nav {
+    display: flex; align-items: center; gap: 1.4rem; margin-top: 0.9rem;
+  }
+  .carousel-arrow {
+    background: none; border: 1px solid var(--navy-border);
+    color: var(--cream); font-size: 1.8rem; width: 42px; height: 42px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .carousel-arrow:hover { background: var(--navy-light); border-color: var(--gold-dim); }
+  .carousel-arrow:disabled { opacity: 0.25; cursor: default; }
+  .carousel-counter { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.1em; min-width: 48px; text-align: center; }
+  .amenity-card.has-images { cursor: pointer; }
+  .amenity-photo-hint {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.7rem; color: var(--gold-dim); margin-top: 0.65rem; letter-spacing: 0.04em;
+  }
+  /* CMS image thumbnails */
+  .cms-img-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .cms-img-thumb { position: relative; width: 72px; height: 52px; }
+  .cms-img-thumb img { width: 72px; height: 52px; object-fit: cover; display: block; border: 1px solid var(--navy-border); }
+  .cms-img-thumb-del {
+    position: absolute; top: -6px; right: -6px;
+    background: #8b2020; border: none; color: #fff; border-radius: 50%;
+    width: 18px; height: 18px; font-size: 0.6rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; line-height: 1;
+  }
+
   /* ─── CONTACT PAGE ─── */
   .contact-grid {
     display: grid;
@@ -1347,6 +1412,23 @@
   </div>
 </div>
 
+<!-- ═══════════════ AMENITY IMAGE CAROUSEL ═══════════════ -->
+<div class="carousel-overlay" id="carouselOverlay" onclick="carouselBackdropClick(event)">
+  <div class="carousel-box">
+    <button class="carousel-close" onclick="closeCarousel()">&#x2715;</button>
+    <div class="carousel-title" id="carouselTitle"></div>
+    <div class="carousel-img-wrap">
+      <img class="carousel-img" id="carouselImg" src="" alt="">
+      <div class="carousel-caption" id="carouselCaption"></div>
+    </div>
+    <div class="carousel-nav">
+      <button class="carousel-arrow" id="carouselPrev" onclick="carouselPrev()">&#8249;</button>
+      <div class="carousel-counter" id="carouselCounter"></div>
+      <button class="carousel-arrow" id="carouselNext" onclick="carouselNext()">&#8250;</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════════ PAGE: HOME ═══════════════════════ -->
 <div class="page active" id="page-home">
 
@@ -1363,7 +1445,7 @@
         </svg>
       </div>
       <h1 class="hero-title">Spruce Valley <span>Ranch</span></h1>
-      <p class="hero-sub">A private mountain enclave, Blue River, Colorado</p>
+      <p class="hero-sub" id="sc-hero-sub">A private mountain enclave, Blue River, Colorado</p>
       <div class="hero-divider"></div>
       <a class="hero-cta" onclick="showPage('amenities')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1389,10 +1471,10 @@
         <div class="section-label">Established 1977</div>
         <h2 class="section-title">A Premier Colorado Mountain Community</h2>
         <div class="section-rule"></div>
-        <p style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:300; line-height:1.8; color:var(--text-muted); font-style:italic;">
+        <p id="sc-about-body" style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:300; line-height:1.8; color:var(--text-muted); font-style:italic;">
           Set on 250 acres of pristine mountain environment adjacent to Goose Pasture Tarn, Spruce Valley Ranch is the premiere private residential community in Summit County — just minutes from Breckenridge with views of the Ten Mile Range.
         </p>
-        <p style="font-size:0.83rem; line-height:1.7; color:var(--text-muted); margin-top:1.2rem;">
+        <p id="sc-about-body2" style="font-size:0.83rem; line-height:1.7; color:var(--text-muted); margin-top:1.2rem;">
           Comprised of 48 custom lots ranging from 2 to 5.7 acres, SVR offers unmatched exclusivity alongside a remarkable collection of private amenities for homeowners and their guests.
         </p>
       </div>
@@ -1624,9 +1706,33 @@
       </div>
     </div>
 
+    <!-- SITE CONTENT -->
+    <div class="cms-section">
+      <div class="cms-section-title">Site Content</div>
+      <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.5;">Edit the key text shown on the public pages. Changes save to Supabase and appear for all visitors.</div>
+      <div id="cms-site-content-list">
+        <div class="cms-item-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem;">
+          <label class="cms-label">Hero Subtitle</label>
+          <input type="text" class="cms-input" id="sc-input-hero-sub" placeholder="A private mountain enclave, Blue River, Colorado">
+          <button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('hero-sub','sc-input-hero-sub')">Save</button>
+        </div>
+        <div class="cms-item-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
+          <label class="cms-label">About — Main Paragraph</label>
+          <textarea class="cms-textarea" id="sc-input-about-body" placeholder="Set on 250 acres..." style="min-height:80px;"></textarea>
+          <button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body','sc-input-about-body')">Save</button>
+        </div>
+        <div class="cms-item-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
+          <label class="cms-label">About — Secondary Paragraph</label>
+          <textarea class="cms-textarea" id="sc-input-about-body2" placeholder="Comprised of 48 custom lots..." style="min-height:70px;"></textarea>
+          <button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body2','sc-input-about-body2')">Save</button>
+        </div>
+      </div>
+    </div>
+
     <!-- AMENITIES -->
     <div class="cms-section">
       <div class="cms-section-title">Amenities</div>
+      <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.5;">Add photos to an amenity and homeowners will see a photo carousel when they click its card. Images are stored in Supabase Storage — paste a public URL or upload a file.</div>
       <div id="cms-amenities-list" style="margin-bottom:1rem;"></div>
       <div style="background:var(--navy); border:1px solid var(--navy-border); padding:1.2rem; margin-top:0.5rem;">
         <div style="font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:1rem;">Add Amenity</div>
@@ -2338,6 +2444,9 @@ function renderAnnouncements() {
   `).join('');
 }
 
+// Amenity images map — populated by renderAmenities, used by carousel
+let amenityImagesMap = {};
+
 function renderAmenities() {
   const icons = [
     '<path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/>',
@@ -2348,15 +2457,162 @@ function renderAmenities() {
     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'
   ];
-  document.getElementById('amenitiesGrid').innerHTML = siteData.amenities.map((a, i) => `
-    <div class="amenity-card">
-      <svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-        ${icons[i % icons.length]}
-      </svg>
-      <div class="amenity-name">${a.name}</div>
-      <div class="amenity-desc">${a.desc}</div>
-    </div>
-  `).join('');
+  // Prefer Supabase amenities if loaded, fall back to siteData
+  const list = (window.sbAmenities && window.sbAmenities.length) ? window.sbAmenities : siteData.amenities;
+  amenityImagesMap = {};
+  document.getElementById('amenitiesGrid').innerHTML = list.map((a, i) => {
+    const images = a.images || [];
+    const hasImages = images.length > 0;
+    const aid = 'a_' + (a.id || i);
+    if (hasImages) amenityImagesMap[aid] = { name: a.name, images };
+    const desc = a.desc || a.description || '';
+    return `<div class="amenity-card${hasImages ? ' has-images' : ''}"${hasImages ? ` onclick="openAmenityCarousel('${aid}')"` : ''}>
+      <svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">${icons[i % icons.length]}</svg>
+      <div class="amenity-name">${escHtml(a.name)}</div>
+      <div class="amenity-desc">${escHtml(desc)}</div>
+      ${hasImages ? `<div class="amenity-photo-hint"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>${images.length} photo${images.length > 1 ? 's' : ''} &mdash; click to view</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// AMENITY IMAGE CAROUSEL
+// ═══════════════════════════════════════════════════
+
+let carouselImages = [];
+let carouselIdx = 0;
+
+function openAmenityCarousel(aid) {
+  const data = amenityImagesMap[aid];
+  if (!data || !data.images.length) return;
+  openCarousel(data.name, data.images);
+}
+
+function openCarousel(name, images) {
+  carouselImages = images;
+  carouselIdx = 0;
+  document.getElementById('carouselTitle').textContent = name;
+  updateCarouselSlide();
+  document.getElementById('carouselOverlay').classList.add('active');
+  document.addEventListener('keydown', onCarouselKey);
+}
+
+function closeCarousel() {
+  document.getElementById('carouselOverlay').classList.remove('active');
+  document.removeEventListener('keydown', onCarouselKey);
+}
+
+function carouselBackdropClick(e) {
+  if (e.target === document.getElementById('carouselOverlay')) closeCarousel();
+}
+
+function onCarouselKey(e) {
+  if (e.key === 'ArrowRight') carouselNext();
+  else if (e.key === 'ArrowLeft') carouselPrev();
+  else if (e.key === 'Escape') closeCarousel();
+}
+
+function carouselNext() {
+  if (carouselIdx < carouselImages.length - 1) { carouselIdx++; updateCarouselSlide(); }
+}
+
+function carouselPrev() {
+  if (carouselIdx > 0) { carouselIdx--; updateCarouselSlide(); }
+}
+
+function updateCarouselSlide() {
+  const img = carouselImages[carouselIdx];
+  const url = (typeof img === 'string') ? img : img.url;
+  const caption = (img && img.caption) ? img.caption : '';
+  document.getElementById('carouselImg').src = url;
+  const capEl = document.getElementById('carouselCaption');
+  capEl.textContent = caption;
+  capEl.style.display = caption ? '' : 'none';
+  document.getElementById('carouselCounter').textContent = (carouselIdx + 1) + ' / ' + carouselImages.length;
+  document.getElementById('carouselPrev').disabled = (carouselIdx === 0);
+  document.getElementById('carouselNext').disabled = (carouselIdx === carouselImages.length - 1);
+}
+
+// ═══════════════════════════════════════════════════
+// SUPABASE CONTENT LOADERS
+// ═══════════════════════════════════════════════════
+
+async function loadAmenitiesFromSupabase() {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+  try {
+    const res = await fetch(sbUrl('amenities?select=*&order=sort_order,id'), { headers: sbHeaders() });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        window.sbAmenities = data;
+        renderAmenities();
+      }
+    }
+  } catch(e) {}
+}
+
+async function loadSiteContent() {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+  try {
+    const res = await fetch(sbUrl('site_content?select=*'), { headers: sbHeaders() });
+    if (res.ok) {
+      const data = await res.json();
+      data.forEach(function(row) {
+        const el = document.getElementById('sc-' + row.key);
+        if (el) el.textContent = row.value;
+        // Also pre-fill the CMS inputs if CMS is open
+        const inp = document.getElementById('sc-input-' + row.key);
+        if (inp) inp.value = row.value;
+      });
+    }
+  } catch(e) {}
+}
+
+async function saveSiteContentField(key, inputId) {
+  const value = document.getElementById(inputId).value.trim();
+  if (!siteData.supabaseUrl || !siteData.supabaseServiceKey) {
+    alert('Supabase service key required to save site content.');
+    return;
+  }
+  try {
+    const res = await fetch(sbUrl('site_content'), {
+      method: 'POST',
+      headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'resolution=merge-duplicates' }),
+      body: JSON.stringify({ key: key, value: value })
+    });
+    if (!res.ok) throw new Error('save failed');
+    const el = document.getElementById('sc-' + key);
+    if (el) el.textContent = value;
+    showSavedIndicator('cms-site-content-list');
+  } catch(e) {
+    alert('Failed to save: ' + e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// SUPABASE IMAGE UPLOAD
+// ═══════════════════════════════════════════════════
+
+async function uploadAmenityImage(amenityId, file) {
+  if (!siteData.supabaseUrl || !siteData.supabaseServiceKey) throw new Error('Service key required');
+  const ext = file.name.split('.').pop().toLowerCase();
+  const path = 'amenities/' + amenityId + '/' + Date.now() + '.' + ext;
+  const uploadUrl = siteData.supabaseUrl.replace(/\/$/, '') + '/storage/v1/object/site-assets/' + path;
+  const res = await fetch(uploadUrl, {
+    method: 'POST',
+    headers: {
+      'apikey': siteData.supabaseServiceKey,
+      'Authorization': 'Bearer ' + siteData.supabaseServiceKey,
+      'Content-Type': file.type,
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(function() { return {}; });
+    throw new Error(err.message || 'Upload failed');
+  }
+  return siteData.supabaseUrl.replace(/\/$/, '') + '/storage/v1/object/public/site-assets/' + path;
 }
 
 function renderBoard() {
@@ -2579,19 +2835,39 @@ function renderCMS() {
     </div>
   `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No announcements.</div>';
 
-  // Amenities — inline editable
-  document.getElementById('cms-amenities-list').innerHTML = siteData.amenities.map(a => `
+  // Amenities — inline editable with image management
+  const cmsAmenitiesList = (window.sbAmenities && window.sbAmenities.length > 0) ? window.sbAmenities : siteData.amenities;
+  const hasStorageKey = !!(siteData.supabaseUrl && siteData.supabaseServiceKey);
+  document.getElementById('cms-amenities-list').innerHTML = cmsAmenitiesList.map(a => {
+    const images = a.images || [];
+    const thumbsHtml = images.length
+      ? `<div class="cms-img-grid">${images.map((img, idx) => {
+          const url = (typeof img === 'string') ? img : img.url;
+          return `<div class="cms-img-thumb"><img src="${escHtml(url)}" alt=""><button class="cms-img-thumb-del" title="Remove" onclick="cmsRemoveImage(${a.id},${idx})">&#x2715;</button></div>`;
+        }).join('')}</div>`
+      : `<div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.4rem;">No photos yet.</div>`;
+    const addImgHtml = hasStorageKey
+      ? `<div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;margin-top:0.3rem;">
+          <input type="text" class="cms-input" id="amenity-img-url-${a.id}" placeholder="Paste image URL…" style="flex:1;min-width:140px;font-size:0.75rem;">
+          <button class="cms-btn cms-btn-secondary" onclick="cmsAddImageUrl(${a.id})" style="white-space:nowrap;padding:0.3rem 0.7rem;">+ URL</button>
+          <button class="cms-btn cms-btn-secondary" onclick="document.getElementById('amenity-img-file-${a.id}').click()" style="white-space:nowrap;padding:0.3rem 0.7rem;">&#8679; Upload</button>
+          <input type="file" id="amenity-img-file-${a.id}" accept="image/*" style="display:none;" onchange="cmsUploadImageFile(${a.id},this)">
+        </div>`
+      : `<div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.3rem;">Add a Service Role Key in Settings to enable image uploads.</div>`;
+    return `
     <div class="cms-item-row" id="amenity-row-${a.id}" style="align-items:flex-start;">
       <div class="cms-item-info" style="display:flex; flex-direction:column; gap:0.5rem; flex:1;">
-        <input type="text" class="cms-input" value="${a.name}" id="amenity-name-${a.id}" placeholder="Amenity name">
-        <textarea class="cms-textarea" id="amenity-desc-${a.id}" placeholder="Description" style="min-height:60px;">${a.desc}</textarea>
+        <input type="text" class="cms-input" value="${escHtml(a.name)}" id="amenity-name-${a.id}" placeholder="Amenity name">
+        <textarea class="cms-textarea" id="amenity-desc-${a.id}" placeholder="Description" style="min-height:60px;">${escHtml(a.desc || a.description || '')}</textarea>
+        <div style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin-top:0.15rem;">Photos</div>
+        ${thumbsHtml}${addImgHtml}
       </div>
       <div class="cms-actions" style="flex-direction:column; align-self:flex-start; margin-top:2px;">
         <button class="cms-btn cms-btn-secondary" onclick="saveAmenity(${a.id})">Save</button>
         <button class="cms-btn cms-btn-danger" onclick="removeAmenity(${a.id})" style="margin-top:0.4rem;">Remove</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No amenities.</div>';
 
   // Board — inline editable
   document.getElementById('cms-board-list').innerHTML = siteData.board.map(b => `
@@ -2656,29 +2932,147 @@ function removeAnnouncement(id) {
   renderCMS();
 }
 
-function addAmenity() {
+async function addAmenity() {
   const name = document.getElementById('newAmenityName').value.trim();
   const desc = document.getElementById('newAmenityDesc').value.trim();
   if (!name) return alert('Please enter an amenity name.');
-  siteData.amenities.push({ id: nextId(siteData.amenities), name, desc });
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const sortOrder = (window.sbAmenities || []).length;
+      const res = await fetch(sbUrl('amenities'), {
+        method: 'POST',
+        headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'return=representation' }),
+        body: JSON.stringify({ name: name, description: desc, images: [], sort_order: sortOrder })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to add amenity: ' + (err.message || res.status));
+      }
+      const inserted = await res.json();
+      const newRow = Array.isArray(inserted) ? inserted[0] : inserted;
+      if (!window.sbAmenities) window.sbAmenities = [];
+      window.sbAmenities.push(newRow);
+    } catch(e) {
+      return alert('Error adding amenity: ' + e.message);
+    }
+  } else {
+    siteData.amenities.push({ id: nextId(siteData.amenities), name: name, desc: desc, images: [] });
+  }
   document.getElementById('newAmenityName').value = '';
   document.getElementById('newAmenityDesc').value = '';
+  renderAmenities();
   renderCMS();
 }
 
-function saveAmenity(id) {
+async function saveAmenity(id) {
   const name = document.getElementById('amenity-name-' + id).value.trim();
   const desc = document.getElementById('amenity-desc-' + id).value.trim();
   if (!name) return alert('Please enter an amenity name.');
-  const amenity = siteData.amenities.find(a => a.id === id);
-  if (amenity) { amenity.name = name; amenity.desc = desc; }
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const res = await fetch(sbUrl('amenities?id=eq.' + id), {
+        method: 'PATCH',
+        headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'return=representation' }),
+        body: JSON.stringify({ name: name, description: desc })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to save: ' + (err.message || res.status));
+      }
+      const amenity = (window.sbAmenities || []).find(a => a.id === id);
+      if (amenity) { amenity.name = name; amenity.description = desc; }
+    } catch(e) {
+      return alert('Error saving amenity: ' + e.message);
+    }
+  } else {
+    const amenity = siteData.amenities.find(a => a.id === id);
+    if (amenity) { amenity.name = name; amenity.desc = desc; }
+  }
+  renderAmenities();
   showSavedIndicator('amenity-row-' + id);
 }
 
-function removeAmenity(id) {
-  siteData.amenities = siteData.amenities.filter(a => a.id !== id);
+async function removeAmenity(id) {
+  if (!confirm('Remove this amenity?')) return;
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const res = await fetch(sbUrl('amenities?id=eq.' + id), {
+        method: 'DELETE',
+        headers: sbServiceHeaders()
+      });
+      if (!res.ok && res.status !== 204) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to remove: ' + (err.message || res.status));
+      }
+      if (window.sbAmenities) window.sbAmenities = window.sbAmenities.filter(a => a.id !== id);
+    } catch(e) {
+      return alert('Error removing amenity: ' + e.message);
+    }
+  } else {
+    siteData.amenities = siteData.amenities.filter(a => a.id !== id);
+  }
+  renderAmenities();
   renderCMS();
 }
+
+// ─── Amenity image helpers ───────────────────────────────────────────────────
+
+async function cmsPatchAmenityImages(amenityId, transformFn) {
+  const list = window.sbAmenities || siteData.amenities;
+  const amenity = list.find(a => a.id === amenityId);
+  if (!amenity) return;
+  const images = transformFn((amenity.images || []).slice());
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const res = await fetch(sbUrl('amenities?id=eq.' + amenityId), {
+        method: 'PATCH',
+        headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'return=representation' }),
+        body: JSON.stringify({ images: images })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to save images: ' + (err.message || res.status));
+      }
+    } catch(e) {
+      return alert('Error saving images: ' + e.message);
+    }
+  }
+  amenity.images = images;
+  renderAmenities();
+  renderCMS();
+}
+
+async function cmsAddImageUrl(amenityId) {
+  const inp = document.getElementById('amenity-img-url-' + amenityId);
+  const url = inp ? inp.value.trim() : '';
+  if (!url) return;
+  await cmsPatchAmenityImages(amenityId, function(images) { images.push({ url: url }); return images; });
+  if (inp) inp.value = '';
+}
+
+async function cmsUploadImageFile(amenityId, fileInput) {
+  const file = fileInput.files[0];
+  if (!file) return;
+  fileInput.value = '';
+  // Show temporary loading state on the row
+  const btn = fileInput.previousElementSibling;
+  const origText = btn ? btn.textContent : '';
+  if (btn) btn.textContent = 'Uploading…';
+  try {
+    const url = await uploadAmenityImage(amenityId, file);
+    await cmsPatchAmenityImages(amenityId, function(images) { images.push({ url: url }); return images; });
+  } catch(e) {
+    alert('Upload failed: ' + e.message);
+    if (btn) btn.textContent = origText;
+  }
+}
+
+async function cmsRemoveImage(amenityId, idx) {
+  if (!confirm('Remove this photo?')) return;
+  await cmsPatchAmenityImages(amenityId, function(images) { images.splice(idx, 1); return images; });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function addBoardMember() {
   const name = document.getElementById('newBoardName').value.trim();
@@ -3208,6 +3602,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAnnouncements();
   renderAmenities();
   renderBoard();
+  // Load live content from Supabase (amenities with images, editable site text)
+  loadAmenitiesFromSupabase();
+  loadSiteContent();
   // Restore session from localStorage
   const saved = sessionLoad();
   if (saved && saved.access_token) {
