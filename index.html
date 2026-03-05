@@ -2823,6 +2823,13 @@ function renderCMS() {
   document.getElementById('cmsSupabaseServiceKey').value = siteData.supabaseServiceKey || '';
   renderAccountsList();
 
+  // Pre-fill site content inputs from the current live page text
+  ['hero-sub', 'about-body', 'about-body2'].forEach(function(key) {
+    const el = document.getElementById('sc-' + key);
+    const inp = document.getElementById('sc-input-' + key);
+    if (el && inp) inp.value = el.textContent.trim();
+  });
+
   // Announcements
   document.getElementById('cms-announcements-list').innerHTML = siteData.announcements.map(a => `
     <div class="cms-item-row">
