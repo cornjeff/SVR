@@ -1711,20 +1711,20 @@
       <div class="cms-section-title">Site Content</div>
       <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.5;">Edit the key text shown on the public pages. Changes save to Supabase and appear for all visitors.</div>
       <div id="cms-site-content-list">
-        <div class="cms-item-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem;">
+        <div class="cms-item-row" id="sc-row-hero-sub" style="flex-direction:column;align-items:flex-start;gap:0.5rem;">
           <label class="cms-label">Hero Subtitle</label>
-          <input type="text" class="cms-input" id="sc-input-hero-sub" placeholder="A private mountain enclave, Blue River, Colorado">
-          <button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('hero-sub','sc-input-hero-sub')">Save</button>
+          <input type="text" class="cms-input" id="sc-input-hero-sub" value="A private mountain enclave, Blue River, Colorado">
+          <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('hero-sub','sc-input-hero-sub')">Save</button></div>
         </div>
-        <div class="cms-item-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
+        <div class="cms-item-row" id="sc-row-about-body" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
           <label class="cms-label">About — Main Paragraph</label>
-          <textarea class="cms-textarea" id="sc-input-about-body" placeholder="Set on 250 acres..." style="min-height:80px;"></textarea>
-          <button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body','sc-input-about-body')">Save</button>
+          <textarea class="cms-textarea" id="sc-input-about-body" style="min-height:80px;">Set on 250 acres of pristine mountain environment adjacent to Goose Pasture Tarn, Spruce Valley Ranch is the premiere private residential community in Summit County — just minutes from Breckenridge with views of the Ten Mile Range.</textarea>
+          <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body','sc-input-about-body')">Save</button></div>
         </div>
-        <div class="cms-item-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
+        <div class="cms-item-row" id="sc-row-about-body2" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
           <label class="cms-label">About — Secondary Paragraph</label>
-          <textarea class="cms-textarea" id="sc-input-about-body2" placeholder="Comprised of 48 custom lots..." style="min-height:70px;"></textarea>
-          <button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body2','sc-input-about-body2')">Save</button>
+          <textarea class="cms-textarea" id="sc-input-about-body2" style="min-height:70px;">Comprised of 48 custom lots ranging from 2 to 5.7 acres, SVR offers unmatched exclusivity alongside a remarkable collection of private amenities for homeowners and their guests.</textarea>
+          <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body2','sc-input-about-body2')">Save</button></div>
         </div>
       </div>
     </div>
@@ -2583,7 +2583,7 @@ async function saveSiteContentField(key, inputId) {
     if (!res.ok) throw new Error('save failed');
     const el = document.getElementById('sc-' + key);
     if (el) el.textContent = value;
-    showSavedIndicator('cms-site-content-list');
+    showSavedIndicator('sc-row-' + key);
   } catch(e) {
     alert('Failed to save: ' + e.message);
   }
@@ -2610,7 +2610,8 @@ async function uploadAmenityImage(amenityId, file) {
   });
   if (!res.ok) {
     const err = await res.json().catch(function() { return {}; });
-    throw new Error(err.message || 'Upload failed');
+    const msg = err.message || 'Upload failed';
+    throw new Error(msg.toLowerCase().includes('bucket') ? 'Bucket not found — go to Supabase → Storage and create a public bucket named exactly "site-assets"' : msg);
   }
   return siteData.supabaseUrl.replace(/\/$/, '') + '/storage/v1/object/public/site-assets/' + path;
 }
@@ -2823,12 +2824,6 @@ function renderCMS() {
   document.getElementById('cmsSupabaseServiceKey').value = siteData.supabaseServiceKey || '';
   renderAccountsList();
 
-  // Pre-fill site content inputs from the current live page text
-  ['hero-sub', 'about-body', 'about-body2'].forEach(function(key) {
-    const el = document.getElementById('sc-' + key);
-    const inp = document.getElementById('sc-input-' + key);
-    if (el && inp) inp.value = el.textContent.trim();
-  });
 
   // Announcements
   document.getElementById('cms-announcements-list').innerHTML = siteData.announcements.map(a => `
@@ -2920,7 +2915,7 @@ function showSavedIndicator(rowId) {
   tag.className = 'inline-saved';
   tag.textContent = '✓ Saved';
   tag.style.cssText = 'font-size:0.68rem; color:#80c880; margin-left:0.5rem; letter-spacing:0.08em;';
-  row.querySelector('.cms-actions').appendChild(tag);
+  (row.querySelector('.cms-actions') || row).appendChild(tag);
   setTimeout(() => tag.remove(), 2500);
 }
 
