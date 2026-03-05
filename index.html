@@ -2431,15 +2431,16 @@ function showPortalTab(name) {
 // ═══════════════════════════════════════════════════
 
 function renderAnnouncements() {
+  const list = getCmsAnnouncements();
   const el = document.getElementById('announcementList');
-  if (!siteData.announcements.length) {
+  if (!list.length) {
     document.getElementById('announcementSection').style.display = 'none';
     return;
   }
   document.getElementById('announcementSection').style.display = '';
-  el.innerHTML = siteData.announcements.map(a => `
+  el.innerHTML = list.map(a => `
     <div class="announcement-item">
-      <span class="announcement-date">${a.date}</span>${a.text}
+      <span class="announcement-date">${escHtml(a.date)}</span>${escHtml(a.text)}
     </div>
   `).join('');
 }
@@ -2616,12 +2617,95 @@ async function uploadAmenityImage(amenityId, file) {
   return siteData.supabaseUrl.replace(/\/$/, '') + '/storage/v1/object/public/site-assets/' + path;
 }
 
+// ═══════════════════════════════════════════════════
+// SUPABASE LOADERS — announcements, board, documents
+// ═══════════════════════════════════════════════════
+
+// Getters: prefer Supabase cache once loaded, fall back to siteData defaults
+function getCmsAnnouncements() { return window.sbAnnouncements !== undefined ? window.sbAnnouncements : siteData.announcements; }
+function getCmsBoard()         { return window.sbBoard         !== undefined ? window.sbBoard         : siteData.board; }
+function getCmsDocuments()     { return window.sbDocuments     !== undefined ? window.sbDocuments     : siteData.documents; }
+
+async function loadAnnouncementsFromSupabase() {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+  try {
+    const res = await fetch(sbUrl('announcements?select=*&order=sort_order,id'), { headers: sbHeaders() });
+    if (res.ok) {
+      window.sbAnnouncements = await res.json();
+      renderAnnouncements();
+      renderCMSSection('announcements');
+    }
+  } catch(e) {}
+}
+
+async function loadBoardFromSupabase() {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+  try {
+    const res = await fetch(sbUrl('board_members?select=*&order=sort_order,id'), { headers: sbHeaders() });
+    if (res.ok) {
+      window.sbBoard = await res.json();
+      renderBoard();
+      renderCMSSection('board');
+    }
+  } catch(e) {}
+}
+
+async function loadDocumentsFromSupabase() {
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+  try {
+    const res = await fetch(sbUrl('documents?select=*&order=sort_order,id'), { headers: sbHeaders() });
+    if (res.ok) {
+      window.sbDocuments = await res.json();
+      renderDocs();
+      renderCMSSection('docs');
+    }
+  } catch(e) {}
+}
+
+// Partial CMS re-render — only re-draws one section to avoid wiping unsaved edits elsewhere
+function renderCMSSection(section) {
+  if (!document.getElementById('cmsOverlay').classList.contains('active')) return;
+  if (section === 'announcements') {
+    document.getElementById('cms-announcements-list').innerHTML = getCmsAnnouncements().map(a => `
+      <div class="cms-item-row">
+        <div class="cms-item-info"><div><strong>${escHtml(a.date)}</strong> — ${escHtml(a.text)}</div></div>
+        <div class="cms-actions"><button class="cms-btn cms-btn-danger" onclick="removeAnnouncement(${a.id})">Remove</button></div>
+      </div>
+    `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No announcements.</div>';
+  } else if (section === 'board') {
+    document.getElementById('cms-board-list').innerHTML = getCmsBoard().map(b => `
+      <div class="cms-item-row" id="board-row-${b.id}">
+        <div class="cms-item-info" style="display:flex; gap:0.8rem; flex:1;">
+          <input type="text" class="cms-input" style="flex:1;" value="${escHtml(b.name)}" id="board-name-${b.id}" placeholder="Name">
+          <input type="text" class="cms-input" style="width:160px; flex-shrink:0;" value="${escHtml(b.role)}" id="board-role-${b.id}" placeholder="Role">
+        </div>
+        <div class="cms-actions">
+          <button class="cms-btn cms-btn-secondary" onclick="saveBoardMember(${b.id})">Save</button>
+          <button class="cms-btn cms-btn-danger" onclick="removeBoardMember(${b.id})">Remove</button>
+        </div>
+      </div>
+    `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No board members.</div>';
+  } else if (section === 'docs') {
+    document.getElementById('cms-docs-list').innerHTML = getCmsDocuments().map(d => `
+      <div class="cms-item-row">
+        <div class="cms-item-info">
+          <div>${escHtml(d.name)}</div>
+          <div class="cms-item-sub">${escHtml(d.category)} · ${escHtml(d.date || '')}</div>
+        </div>
+        <div class="cms-actions">
+          <button class="cms-btn cms-btn-danger" onclick="removeDocument(${d.id})">Remove</button>
+        </div>
+      </div>
+    `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No documents.</div>';
+  }
+}
+
 function renderBoard() {
   const el = document.getElementById('boardList');
-  el.innerHTML = siteData.board.map(b => `
+  el.innerHTML = getCmsBoard().map(b => `
     <div class="contact-item">
-      <div class="contact-item-label">${b.role}</div>
-      <div class="contact-item-value">${b.name}</div>
+      <div class="contact-item-label">${escHtml(b.role)}</div>
+      <div class="contact-item-value">${escHtml(b.name)}</div>
     </div>
   `).join('');
   const emailEl = document.getElementById('contactEmail');
@@ -2647,7 +2731,7 @@ function renderDocs() {
   };
 
   const docsByCat = {};
-  siteData.documents.forEach(d => {
+  getCmsDocuments().forEach(d => {
     if (!docsByCat[d.category]) docsByCat[d.category] = [];
     docsByCat[d.category].push(d);
   });
@@ -2826,10 +2910,10 @@ function renderCMS() {
 
 
   // Announcements
-  document.getElementById('cms-announcements-list').innerHTML = siteData.announcements.map(a => `
+  document.getElementById('cms-announcements-list').innerHTML = getCmsAnnouncements().map(a => `
     <div class="cms-item-row">
       <div class="cms-item-info">
-        <div><strong>${a.date}</strong> — ${a.text}</div>
+        <div><strong>${escHtml(a.date)}</strong> — ${escHtml(a.text)}</div>
       </div>
       <div class="cms-actions">
         <button class="cms-btn cms-btn-danger" onclick="removeAnnouncement(${a.id})">Remove</button>
@@ -2872,11 +2956,11 @@ function renderCMS() {
   }).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No amenities.</div>';
 
   // Board — inline editable
-  document.getElementById('cms-board-list').innerHTML = siteData.board.map(b => `
+  document.getElementById('cms-board-list').innerHTML = getCmsBoard().map(b => `
     <div class="cms-item-row" id="board-row-${b.id}">
       <div class="cms-item-info" style="display:flex; gap:0.8rem; flex:1;">
-        <input type="text" class="cms-input" style="flex:1;" value="${b.name}" id="board-name-${b.id}" placeholder="Name">
-        <input type="text" class="cms-input" style="width:160px; flex-shrink:0;" value="${b.role}" id="board-role-${b.id}" placeholder="Role">
+        <input type="text" class="cms-input" style="flex:1;" value="${escHtml(b.name)}" id="board-name-${b.id}" placeholder="Name">
+        <input type="text" class="cms-input" style="width:160px; flex-shrink:0;" value="${escHtml(b.role)}" id="board-role-${b.id}" placeholder="Role">
       </div>
       <div class="cms-actions">
         <button class="cms-btn cms-btn-secondary" onclick="saveBoardMember(${b.id})">Save</button>
@@ -2886,11 +2970,11 @@ function renderCMS() {
   `).join('') || '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">No board members.</div>';
 
   // Documents
-  document.getElementById('cms-docs-list').innerHTML = siteData.documents.map(d => `
+  document.getElementById('cms-docs-list').innerHTML = getCmsDocuments().map(d => `
     <div class="cms-item-row">
       <div class="cms-item-info">
-        <div>${d.name}</div>
-        <div class="cms-item-sub">${d.category} · ${d.date}</div>
+        <div>${escHtml(d.name)}</div>
+        <div class="cms-item-sub">${escHtml(d.category)} · ${escHtml(d.date || '')}</div>
       </div>
       <div class="cms-actions">
         <button class="cms-btn cms-btn-danger" onclick="removeDocument(${d.id})">Remove</button>
@@ -2919,19 +3003,48 @@ function showSavedIndicator(rowId) {
   setTimeout(() => tag.remove(), 2500);
 }
 
-function addAnnouncement() {
+async function addAnnouncement() {
   const date = document.getElementById('newAnnDate').value.trim();
   const text = document.getElementById('newAnnText').value.trim();
   if (!date || !text) return alert('Please fill in both date and message.');
-  siteData.announcements.push({ id: nextId(siteData.announcements), date, text });
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const sortOrder = (window.sbAnnouncements || []).length;
+      const res = await fetch(sbUrl('announcements'), {
+        method: 'POST',
+        headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'return=representation' }),
+        body: JSON.stringify({ date, text, sort_order: sortOrder })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to add announcement: ' + (err.message || res.status));
+      }
+      const inserted = await res.json();
+      const newRow = Array.isArray(inserted) ? inserted[0] : inserted;
+      if (!window.sbAnnouncements) window.sbAnnouncements = [];
+      window.sbAnnouncements.push(newRow);
+    } catch(e) { return alert('Error: ' + e.message); }
+  } else {
+    siteData.announcements.push({ id: nextId(siteData.announcements), date, text });
+  }
   document.getElementById('newAnnDate').value = '';
   document.getElementById('newAnnText').value = '';
-  renderCMS();
+  renderAnnouncements();
+  renderCMSSection('announcements');
 }
 
-function removeAnnouncement(id) {
-  siteData.announcements = siteData.announcements.filter(a => a.id !== id);
-  renderCMS();
+async function removeAnnouncement(id) {
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const res = await fetch(sbUrl('announcements?id=eq.' + id), { method: 'DELETE', headers: sbServiceHeaders() });
+      if (!res.ok && res.status !== 204) return alert('Failed to remove announcement.');
+      if (window.sbAnnouncements) window.sbAnnouncements = window.sbAnnouncements.filter(a => a.id !== id);
+    } catch(e) { return alert('Error: ' + e.message); }
+  } else {
+    siteData.announcements = siteData.announcements.filter(a => a.id !== id);
+  }
+  renderAnnouncements();
+  renderCMSSection('announcements');
 }
 
 async function addAmenity() {
@@ -3076,46 +3189,122 @@ async function cmsRemoveImage(amenityId, idx) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-function addBoardMember() {
+async function addBoardMember() {
   const name = document.getElementById('newBoardName').value.trim();
   const role = document.getElementById('newBoardRole').value.trim();
   if (!name || !role) return alert('Please fill in name and role.');
-  siteData.board.push({ id: nextId(siteData.board), name, role });
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const sortOrder = (window.sbBoard || []).length;
+      const res = await fetch(sbUrl('board_members'), {
+        method: 'POST',
+        headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'return=representation' }),
+        body: JSON.stringify({ name, role, sort_order: sortOrder })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to add board member: ' + (err.message || res.status));
+      }
+      const inserted = await res.json();
+      const newRow = Array.isArray(inserted) ? inserted[0] : inserted;
+      if (!window.sbBoard) window.sbBoard = [];
+      window.sbBoard.push(newRow);
+    } catch(e) { return alert('Error: ' + e.message); }
+  } else {
+    siteData.board.push({ id: nextId(siteData.board), name, role });
+  }
   document.getElementById('newBoardName').value = '';
   document.getElementById('newBoardRole').value = '';
-  renderCMS();
+  renderBoard();
+  renderCMSSection('board');
 }
 
-function saveBoardMember(id) {
+async function saveBoardMember(id) {
   const name = document.getElementById('board-name-' + id).value.trim();
   const role = document.getElementById('board-role-' + id).value.trim();
   if (!name || !role) return alert('Please fill in both name and role.');
-  const member = siteData.board.find(b => b.id === id);
-  if (member) { member.name = name; member.role = role; }
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const res = await fetch(sbUrl('board_members?id=eq.' + id), {
+        method: 'PATCH',
+        headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'return=representation' }),
+        body: JSON.stringify({ name, role })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to save: ' + (err.message || res.status));
+      }
+      const member = (window.sbBoard || []).find(b => b.id === id);
+      if (member) { member.name = name; member.role = role; }
+    } catch(e) { return alert('Error: ' + e.message); }
+  } else {
+    const member = siteData.board.find(b => b.id === id);
+    if (member) { member.name = name; member.role = role; }
+  }
+  renderBoard();
   showSavedIndicator('board-row-' + id);
 }
 
-function removeBoardMember(id) {
-  siteData.board = siteData.board.filter(b => b.id !== id);
-  renderCMS();
+async function removeBoardMember(id) {
+  if (!confirm('Remove this board member?')) return;
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const res = await fetch(sbUrl('board_members?id=eq.' + id), { method: 'DELETE', headers: sbServiceHeaders() });
+      if (!res.ok && res.status !== 204) return alert('Failed to remove board member.');
+      if (window.sbBoard) window.sbBoard = window.sbBoard.filter(b => b.id !== id);
+    } catch(e) { return alert('Error: ' + e.message); }
+  } else {
+    siteData.board = siteData.board.filter(b => b.id !== id);
+  }
+  renderBoard();
+  renderCMSSection('board');
 }
 
-function addDocument() {
+async function addDocument() {
   const name = document.getElementById('newDocName').value.trim();
   const category = document.getElementById('newDocCategory').value;
   const date = document.getElementById('newDocDate').value.trim();
   const url = document.getElementById('newDocUrl').value.trim() || '#';
   if (!name) return alert('Please enter a document name.');
-  siteData.documents.push({ id: nextId(siteData.documents), name, category, date, url });
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const sortOrder = (window.sbDocuments || []).length;
+      const res = await fetch(sbUrl('documents'), {
+        method: 'POST',
+        headers: Object.assign({}, sbServiceHeaders(), { 'Prefer': 'return=representation' }),
+        body: JSON.stringify({ name, category, date, url, sort_order: sortOrder })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(function() { return {}; });
+        return alert('Failed to add document: ' + (err.message || res.status));
+      }
+      const inserted = await res.json();
+      const newRow = Array.isArray(inserted) ? inserted[0] : inserted;
+      if (!window.sbDocuments) window.sbDocuments = [];
+      window.sbDocuments.push(newRow);
+    } catch(e) { return alert('Error: ' + e.message); }
+  } else {
+    siteData.documents.push({ id: nextId(siteData.documents), name, category, date, url });
+  }
   document.getElementById('newDocName').value = '';
   document.getElementById('newDocDate').value = '';
   document.getElementById('newDocUrl').value = '';
-  renderCMS();
+  renderDocs();
+  renderCMSSection('docs');
 }
 
-function removeDocument(id) {
-  siteData.documents = siteData.documents.filter(d => d.id !== id);
-  renderCMS();
+async function removeDocument(id) {
+  if (siteData.supabaseUrl && siteData.supabaseServiceKey) {
+    try {
+      const res = await fetch(sbUrl('documents?id=eq.' + id), { method: 'DELETE', headers: sbServiceHeaders() });
+      if (!res.ok && res.status !== 204) return alert('Failed to remove document.');
+      if (window.sbDocuments) window.sbDocuments = window.sbDocuments.filter(d => d.id !== id);
+    } catch(e) { return alert('Error: ' + e.message); }
+  } else {
+    siteData.documents = siteData.documents.filter(d => d.id !== id);
+  }
+  renderDocs();
+  renderCMSSection('docs');
 }
 
 function changePassword() {
@@ -3604,9 +3793,12 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAnnouncements();
   renderAmenities();
   renderBoard();
-  // Load live content from Supabase (amenities with images, editable site text)
+  // Load live content from Supabase
   loadAmenitiesFromSupabase();
   loadSiteContent();
+  loadAnnouncementsFromSupabase();
+  loadBoardFromSupabase();
+  loadDocumentsFromSupabase();
   // Restore session from localStorage
   const saved = sessionLoad();
   if (saved && saved.access_token) {
