@@ -1899,17 +1899,12 @@
     position: relative;
   }
   #page-home .announcement-label::after {
-    content: 'Vol. I · No. 01';
+    content: '';
     display: block;
-    font-family: 'Raleway', sans-serif;
-    font-style: normal;
-    font-size: 0.56rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: rgba(237,228,211,0.45);
+    width: 36px;
+    height: 1px;
+    background: rgba(181,148,90,0.45);
     margin-top: 0.85rem;
-    padding-top: 0.7rem;
-    border-top: 1px solid rgba(181,148,90,0.3);
   }
   #page-home .announcement-items {
     flex: none;
@@ -2252,33 +2247,32 @@
     <div class="hero-content">
       <div class="hero-masthead">
         <div class="hero-dateline">
-          <span>Indiana Creek Valley</span>
           <span>Blue River · Colorado</span>
         </div>
         <h1 class="hero-title">
           Spruce Valley
-          <em>— Ranch.</em>
+          <em>Ranch.</em>
         </h1>
-        <p class="hero-sub" id="sc-hero-sub">Forty-eight custom homesites threaded through 250 acres of alpine meadow, adjacent to Goose Pasture Tarn and the Ten Mile Range.</p>
+        <p class="hero-sub" id="sc-hero-sub">48 custom homesites on 250 acres adjacent to Goose Pasture Tarn, with views of the Ten Mile Range.</p>
       </div>
 
       <aside class="hero-stamp" aria-label="At a glance">
         <div class="hero-stamp-key">Founded</div>
-        <div class="hero-stamp-value">Anno <em>mcmlxxvii</em></div>
+        <div class="hero-stamp-value">1977</div>
 
-        <div class="hero-stamp-key">Holding</div>
-        <div class="hero-stamp-value">XLVIII <em>lots</em> · 250 <em>acres</em></div>
+        <div class="hero-stamp-key">Area</div>
+        <div class="hero-stamp-value">48 lots · 250 acres</div>
 
-        <div class="hero-stamp-key">Situation</div>
+        <div class="hero-stamp-key">Location</div>
         <div class="hero-stamp-value">39° 28′ N · 106° 02′ W</div>
 
         <div class="hero-stamp-key">Elevation</div>
-        <div class="hero-stamp-value">9,460 <em>ft.</em> above sea</div>
+        <div class="hero-stamp-value">9,460 ft.</div>
       </aside>
 
       <div class="hero-footline">
-        <a class="hero-link" onclick="showPage('amenities')">Walk the grounds</a>
-        <div class="hero-folio">A private mountain enclave, est. 1977</div>
+        <a class="hero-link" onclick="showPage('amenities')">Explore the ranch</a>
+        <div class="hero-folio">Blue River, Colorado · Est. 1977</div>
       </div>
     </div>
   </div>
@@ -2287,24 +2281,25 @@
   <div class="announcement-section" id="announcementSection">
     <div class="announcement-inner">
       <div class="announcement-label">News</div>
+
       <div class="announcement-items" id="announcementList">
         <!-- populated by JS -->
       </div>
     </div>
   </div>
 
-  <!-- COLOPHON -->
+  <!-- ABOUT -->
   <section class="home-colophon">
     <div class="home-colophon-inner">
       <div>
-        <div class="colophon-header"><span>The Colophon</span><span>Est. MCMLXXVII</span></div>
-        <h2 class="colophon-title">A quiet seat<br>in the <em>Ten Mile Range.</em></h2>
-        <p class="colophon-lede" id="sc-about-body">Set on two hundred and fifty acres of alpine terrain adjacent to Goose Pasture Tarn, Spruce Valley Ranch is a private residential community in Summit County — a short drive from Breckenridge, with the full breadth of the Ten Mile Range in view.</p>
-        <p class="colophon-body" id="sc-about-body2">Forty-eight custom lots, each between two and five-point-seven acres, compose the holding. The Ranch remains family-owned and member-governed, with a remarkable collection of private amenities reserved for homeowners and their guests.</p>
+        <div class="colophon-header"><span>About Spruce Valley</span><span>Est. 1977</span></div>
+        <h2 class="colophon-title">A private community<br>in <em>Blue River, Colorado.</em></h2>
+        <p class="colophon-lede" id="sc-about-body">Spruce Valley Ranch is a private residential community on 250 acres adjacent to Goose Pasture Tarn in Summit County, Colorado — a short drive from Breckenridge, with views of the Ten Mile Range.</p>
+        <p class="colophon-body" id="sc-about-body2">48 custom lots, each between 2 and 5.7 acres, make up the community. The Ranch is member-governed, with a collection of private amenities reserved for homeowners and their guests.</p>
       </div>
 
-      <aside class="register" aria-label="Register">
-        <div class="register-header">— The Register</div>
+      <aside class="register" aria-label="At a glance">
+        <div class="register-header">At a glance</div>
         <div class="register-row">
           <div class="register-key">Location</div>
           <div class="register-value">Blue River, <em>Colorado</em><small>Summit County · Indiana Creek Valley</small></div>
@@ -2314,16 +2309,16 @@
           <div class="register-value">9,460 <em>ft.</em><small>Tarn 9,460 · Ridge 11,200</small></div>
         </div>
         <div class="register-row">
-          <div class="register-key">Holding</div>
-          <div class="register-value">Forty-eight <em>lots</em><small>2.0 – 5.7 acres · 250 total</small></div>
+          <div class="register-key">Area</div>
+          <div class="register-value">48 <em>lots</em><small>2.0 – 5.7 acres · 250 total</small></div>
         </div>
         <div class="register-row">
           <div class="register-key">Founded</div>
-          <div class="register-value">1977<small>Family-owned · Member-governed</small></div>
+          <div class="register-value">1977<small>Member-governed</small></div>
         </div>
         <div class="register-row">
           <div class="register-key">Breckenridge</div>
-          <div class="register-value">Two <em>miles</em><small>South along Route 9</small></div>
+          <div class="register-value">2 <em>miles</em><small>South along Route 9</small></div>
         </div>
       </aside>
     </div>
@@ -2555,17 +2550,17 @@
       <div id="cms-site-content-list">
         <div class="cms-item-row" id="sc-row-hero-sub" style="flex-direction:column;align-items:flex-start;gap:0.5rem;">
           <label class="cms-label">Hero Subtitle</label>
-          <input type="text" class="cms-input" id="sc-input-hero-sub" value="A private mountain enclave, Blue River, Colorado">
+          <input type="text" class="cms-input" id="sc-input-hero-sub" value="48 custom homesites on 250 acres adjacent to Goose Pasture Tarn, with views of the Ten Mile Range.">
           <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('hero-sub','sc-input-hero-sub')">Save</button></div>
         </div>
         <div class="cms-item-row" id="sc-row-about-body" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
           <label class="cms-label">About — Main Paragraph</label>
-          <textarea class="cms-textarea" id="sc-input-about-body" style="min-height:80px;">Set on 250 acres of pristine mountain environment adjacent to Goose Pasture Tarn, Spruce Valley Ranch is the premiere private residential community in Summit County — just minutes from Breckenridge with views of the Ten Mile Range.</textarea>
+          <textarea class="cms-textarea" id="sc-input-about-body" style="min-height:80px;">Spruce Valley Ranch is a private residential community on 250 acres adjacent to Goose Pasture Tarn in Summit County, Colorado — a short drive from Breckenridge, with views of the Ten Mile Range.</textarea>
           <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body','sc-input-about-body')">Save</button></div>
         </div>
         <div class="cms-item-row" id="sc-row-about-body2" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
           <label class="cms-label">About — Secondary Paragraph</label>
-          <textarea class="cms-textarea" id="sc-input-about-body2" style="min-height:70px;">Comprised of 48 custom lots ranging from 2 to 5.7 acres, SVR offers unmatched exclusivity alongside a remarkable collection of private amenities for homeowners and their guests.</textarea>
+          <textarea class="cms-textarea" id="sc-input-about-body2" style="min-height:70px;">48 custom lots, each between 2 and 5.7 acres, make up the community. The Ranch is member-governed, with a collection of private amenities reserved for homeowners and their guests.</textarea>
           <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body2','sc-input-about-body2')">Save</button></div>
         </div>
       </div>
