@@ -3500,13 +3500,22 @@ async function doForgotPassword() {
   btn.disabled = true;
   btn.textContent = 'Sending…';
   try {
-    await fetch(sbAuthUrl('recover'), {
+    // /recover expects redirect_to as a query param, not in the body. Previously we sent
+    // `redirectTo` in the body and it was silently ignored → Supabase fell back to the
+    // project's Site URL every time.
+    const redirectTo = window.location.href.split('#')[0].split('?')[0];
+    const res = await fetch(sbAuthUrl('recover') + '?redirect_to=' + encodeURIComponent(redirectTo), {
       method: 'POST',
       headers: sbAnonHeaders(),
-      body: JSON.stringify({ email, redirectTo: window.location.href.split('#')[0] })
+      body: JSON.stringify({ email })
     });
-    // Always show success to avoid email enumeration
-    document.getElementById('forgotSuccess').style.display = 'block';
+    if (res.status === 429) {
+      err.textContent = 'Too many attempts. Wait a few minutes before trying again.';
+      err.style.display = 'block';
+    } else {
+      // Always show success (non-429) to avoid email enumeration
+      document.getElementById('forgotSuccess').style.display = 'block';
+    }
   } catch(e) {
     err.textContent = 'Network error. Please try again.';
     err.style.display = 'block';
