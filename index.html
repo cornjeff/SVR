@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spruce Valley Ranch — Blue River, Colorado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..500,0..100,0..1;1,9..144,300..500,0..100,0..1&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #0d1b2a;
@@ -1635,6 +1635,1025 @@
     .nav-links { display: none; }
     .cms-row { grid-template-columns: 1fr; }
   }
+
+  /* ═══════════════════ HOME · EDITORIAL REFRESH ═══════════════════ */
+  :root {
+    --vellum: #ede4d3;
+    --vellum-dim: #d4c9b2;
+    --brass: #b5945a;
+    --brass-deep: #8a6f3f;
+    --ink-deep: #070d12;
+  }
+
+  /* Hero — asymmetric editorial masthead */
+  #page-home .hero {
+    height: calc(100vh - 70px);
+    min-height: 680px;
+  }
+
+  #page-home .hero-photo {
+    background-position: center 45%;
+    filter: saturate(0.82) contrast(1.02);
+  }
+
+  #page-home .hero-overlay {
+    background:
+      linear-gradient(168deg, rgba(7,13,18,0.05) 0%, rgba(7,13,18,0.28) 45%, rgba(7,13,18,0.88) 100%),
+      radial-gradient(140% 90% at 88% 8%, rgba(7,13,18,0) 0%, rgba(7,13,18,0.45) 100%);
+  }
+
+  #page-home .hero-bg { display: none; }
+
+  /* Corner marks — editorial tick marks at the frame */
+  #page-home .hero::before,
+  #page-home .hero::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(237,228,211,0.35);
+    z-index: 2;
+    pointer-events: none;
+  }
+  #page-home .hero::before {
+    top: 1.6rem; left: 1.6rem;
+    border-right: none; border-bottom: none;
+  }
+  #page-home .hero::after {
+    bottom: 1.6rem; right: 1.6rem;
+    border-left: none; border-top: none;
+  }
+
+  #page-home .hero-content {
+    position: absolute;
+    inset: auto 0 0 0;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 3.2rem 3.6rem;
+    text-align: left;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 3.5rem;
+    row-gap: 2rem;
+    align-items: end;
+    animation: heroRise 1.4s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  @keyframes heroRise {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #page-home .hero-eyebrow,
+  #page-home .hero-logo-large,
+  #page-home .hero-divider,
+  #page-home .hero-cta { display: none; }
+
+  #page-home .hero-masthead { grid-column: 1; grid-row: 1; max-width: 700px; }
+
+  #page-home .hero-dateline {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--vellum);
+    margin-bottom: 1.6rem;
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+  }
+  #page-home .hero-dateline::before {
+    content: '';
+    width: 46px; height: 1px;
+    background: var(--brass);
+  }
+  #page-home .hero-dateline span + span::before {
+    content: '·';
+    margin-right: 1rem;
+    color: rgba(237,228,211,0.5);
+  }
+
+  #page-home .hero-title {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 0;
+    font-size: clamp(3rem, 8.2vw, 6.6rem);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.015em;
+    color: var(--vellum);
+    text-shadow: 0 2px 22px rgba(0,0,0,0.55);
+    margin: 0 0 1.2rem;
+  }
+  #page-home .hero-title em {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.68em;
+    color: var(--vellum);
+    padding-left: 1.8em;
+    letter-spacing: 0.005em;
+    margin-top: 0.06em;
+  }
+  #page-home .hero-title em::before {
+    content: '';
+    display: inline-block;
+    width: 1.3em; height: 1px;
+    background: var(--brass);
+    vertical-align: 0.35em;
+    margin-right: 0.35em;
+  }
+
+  #page-home .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(237,228,211,0.82);
+    max-width: 42ch;
+    line-height: 1.5;
+    letter-spacing: 0.005em;
+    margin: 0;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.7);
+  }
+
+  /* Right column — the Stamp (register of facts as editorial marginalia) */
+  #page-home .hero-stamp {
+    grid-column: 2; grid-row: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1.4rem;
+    row-gap: 0.72rem;
+    align-self: end;
+    justify-self: end;
+    padding: 1.4rem 0 0;
+    border-top: 1px solid rgba(181,148,90,0.6);
+    min-width: 320px;
+    max-width: 360px;
+  }
+  #page-home .hero-stamp-key {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.56rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(237,228,211,0.55);
+    padding-top: 4px;
+  }
+  #page-home .hero-stamp-value {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 20, 'SOFT' 60;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--vellum);
+    letter-spacing: 0.005em;
+    line-height: 1.3;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+  #page-home .hero-stamp-value em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--brass);
+    margin: 0 0.15em;
+  }
+
+  /* Footline — quiet link + folio */
+  #page-home .hero-footline {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid rgba(237,228,211,0.14);
+    padding-top: 1.3rem;
+    margin-top: 1rem;
+  }
+  #page-home .hero-link {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--vellum);
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--brass);
+    cursor: pointer;
+    transition: color .3s, border-color .3s;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.8rem;
+  }
+  #page-home .hero-link::after {
+    content: '→';
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    letter-spacing: 0;
+    transition: transform .3s;
+  }
+  #page-home .hero-link:hover { color: var(--brass); }
+  #page-home .hero-link:hover::after { transform: translateX(6px); }
+
+  #page-home .hero-folio {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 14, 'SOFT' 80, 'WONK' 1;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: rgba(237,228,211,0.55);
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Announcements: re-skin as dispatch column ── */
+  #page-home .announcement-section {
+    background: linear-gradient(180deg, var(--ink-deep) 0%, var(--navy-mid) 100%);
+    border-top: none;
+    border-bottom: 1px solid rgba(181,148,90,0.22);
+    padding: 2.4rem 2rem 2.6rem;
+  }
+  #page-home .announcement-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    column-gap: 3rem;
+    align-items: start;
+  }
+  #page-home .announcement-label {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 48;
+    font-style: italic;
+    font-size: 1.55rem;
+    font-weight: 300;
+    letter-spacing: -0.005em;
+    text-transform: none;
+    color: var(--brass);
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    position: relative;
+  }
+  #page-home .announcement-label::after {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 1px;
+    background: rgba(181,148,90,0.45);
+    margin-top: 0.85rem;
+  }
+  #page-home .announcement-items {
+    flex: none;
+    border-left: 1px solid rgba(181,148,90,0.28);
+    padding-left: 2.2rem;
+    margin-left: -1.2rem;
+  }
+  #page-home .announcement-item {
+    padding: 0.7rem 0;
+    border-bottom: 1px dotted rgba(181,148,90,0.28);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.12rem;
+    font-weight: 300;
+    color: rgba(237,228,211,0.82);
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+  }
+  #page-home .announcement-item:first-child { padding-top: 0; }
+  #page-home .announcement-date {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-right: 1rem;
+  }
+
+  /* ── About section → The Colophon ── */
+  #page-home .home-colophon {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--navy-border);
+    position: relative;
+    padding: 6rem 2rem 6.4rem;
+    overflow: hidden;
+  }
+  #page-home .home-colophon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(55% 40% at 18% 22%, rgba(181,148,90,0.08), transparent 70%),
+      radial-gradient(50% 40% at 85% 85%, rgba(181,148,90,0.05), transparent 70%);
+    pointer-events: none;
+  }
+  #page-home .home-colophon::after {
+    /* faint topographic strokes, SVG-as-data */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'%3E%3Cg fill='none' stroke='%23b5945a' stroke-width='0.6' opacity='0.09'%3E%3Cpath d='M0,380 Q200,320 380,340 T760,300 T1200,340'/%3E%3Cpath d='M0,420 Q180,360 360,380 T720,340 T1200,380'/%3E%3Cpath d='M0,460 Q200,420 400,430 T780,400 T1200,430'/%3E%3Cpath d='M0,500 Q220,470 420,480 T800,450 T1200,470'/%3E%3Cpath d='M0,540 Q220,520 420,525 T800,500 T1200,520'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 100% auto;
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+  #page-home .home-colophon-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    column-gap: 5rem;
+    position: relative;
+    z-index: 1;
+  }
+  #page-home .colophon-header {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  #page-home .colophon-header::before {
+    content: '';
+    width: 34px; height: 1px;
+    background: var(--brass);
+  }
+  #page-home .colophon-header span + span::before {
+    content: '·';
+    margin-right: 1.1rem;
+    color: rgba(181,148,90,0.55);
+  }
+  #page-home .colophon-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 80, 'WONK' 0;
+    font-size: clamp(2.2rem, 4vw, 3.6rem);
+    font-weight: 300;
+    color: var(--vellum);
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+    margin: 0 0 1.4rem;
+    max-width: 15ch;
+  }
+  #page-home .colophon-title em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--brass);
+  }
+  #page-home .colophon-lede {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.22rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.65;
+    color: var(--vellum-dim);
+    margin: 0 0 1.1rem;
+    max-width: 48ch;
+  }
+  #page-home .colophon-lede::first-letter {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 3.6em;
+    line-height: 0.9;
+    float: left;
+    margin: 0.08em 0.12em -0.05em -0.02em;
+    color: var(--brass);
+  }
+  #page-home .colophon-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.06rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgba(237,228,211,0.62);
+    max-width: 48ch;
+    margin: 0;
+  }
+
+  #page-home .register {
+    align-self: start;
+    border-top: 1px solid rgba(181,148,90,0.45);
+    padding-top: 1.4rem;
+    margin-top: 0.6rem;
+  }
+  #page-home .register-header {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 1.4rem;
+  }
+  #page-home .register-row {
+    display: grid;
+    grid-template-columns: 108px 1fr;
+    column-gap: 1.2rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px dotted rgba(181,148,90,0.28);
+    align-items: baseline;
+  }
+  #page-home .register-row:last-child { border-bottom: none; }
+  #page-home .register-key {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(237,228,211,0.48);
+  }
+  #page-home .register-value {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 24, 'SOFT' 70;
+    font-size: 1.02rem;
+    font-weight: 300;
+    color: var(--vellum);
+    line-height: 1.3;
+    letter-spacing: 0.002em;
+  }
+  #page-home .register-value em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--brass);
+  }
+  #page-home .register-value small {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.56rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(237,228,211,0.4);
+    margin-top: 5px;
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    #page-home .hero-content {
+      grid-template-columns: 1fr;
+      padding: 2rem 1.5rem 2.4rem;
+      row-gap: 1.8rem;
+    }
+    #page-home .hero-stamp {
+      grid-column: 1;
+      justify-self: start;
+      min-width: 0;
+      width: 100%;
+    }
+    #page-home .hero::before, #page-home .hero::after { display: none; }
+    #page-home .home-colophon-inner {
+      grid-template-columns: 1fr;
+      row-gap: 3rem;
+    }
+    #page-home .announcement-inner {
+      grid-template-columns: 1fr;
+      row-gap: 1rem;
+    }
+    #page-home .announcement-items {
+      border-left: none;
+      padding-left: 0;
+      margin-left: 0;
+    }
+  }
+  @media (max-width: 600px) {
+    #page-home .hero-title em { padding-left: 0.6em; }
+    #page-home .hero-footline { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  }
+
+  /* ═══════════ SHARED EDITORIAL HEADERS (amenities / contact / members) ═══════════ */
+  :is(#page-amenities, #page-contact) .section-inner { max-width: 1120px; }
+
+  :is(#page-amenities, #page-contact) .section-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--brass);
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-bottom: 1.4rem;
+  }
+  :is(#page-amenities, #page-contact) .section-label::before {
+    content: '';
+    width: 42px; height: 1px;
+    background: var(--brass);
+  }
+
+  :is(#page-amenities, #page-contact) .section-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 80, 'WONK' 0;
+    font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+    font-weight: 300;
+    color: var(--vellum);
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+    margin: 0 0 1.2rem;
+    text-transform: none;
+    max-width: 18ch;
+  }
+  :is(#page-amenities, #page-contact) .section-title em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--brass);
+  }
+
+  :is(#page-amenities, #page-contact) .section-rule { display: none; }
+
+  :is(#page-amenities, #page-contact) .section-intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--vellum-dim);
+    max-width: 58ch;
+    margin-top: 0;
+  }
+
+  /* ═══════════ AMENITIES ═══════════ */
+  #page-amenities section { padding: 5.5rem 2rem 3rem; }
+  #page-amenities .amenity-strip-wrap { padding-top: 0; }
+
+  /* ═══════════ CONTACT ═══════════ */
+  #page-contact section { padding: 5.5rem 2rem 6rem; }
+  #page-contact .contact-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 5rem;
+    margin-top: 2.4rem;
+  }
+
+  #page-contact .contact-block h3 {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 48, 'SOFT' 50;
+    font-style: italic;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: -0.005em;
+    text-transform: none;
+    color: var(--vellum);
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(181,148,90,0.3);
+    margin-bottom: 1.3rem;
+  }
+
+  #page-contact .contact-item {
+    padding: 0.9rem 0;
+    border-bottom: 1px dotted rgba(181,148,90,0.28);
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    column-gap: 1.2rem;
+    align-items: baseline;
+  }
+  #page-contact .contact-item:last-child { border-bottom: none; }
+  #page-contact .contact-item-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(237,228,211,0.5);
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+  #page-contact .contact-item-value {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 20, 'SOFT' 60;
+    font-size: 1rem;
+    color: var(--vellum);
+    font-weight: 300;
+    letter-spacing: 0.005em;
+    line-height: 1.4;
+  }
+  #page-contact .contact-item-value a {
+    color: var(--vellum);
+    border-bottom: 1px solid var(--brass);
+    padding-bottom: 1px;
+    transition: color .3s, border-color .3s;
+  }
+  #page-contact .contact-item-value a:hover { color: var(--brass); }
+  #page-contact .contact-item-value small,
+  #page-contact .contact-item-value span {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(237,228,211,0.45);
+    margin-top: 6px;
+    font-weight: 400;
+  }
+
+  #page-contact .member-access-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.08rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(237,228,211,0.65);
+    margin: 0 0 1.5rem;
+    max-width: 52ch;
+  }
+
+  #page-contact .member-access-link,
+  #page-contact .portal-link {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--vellum);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--brass);
+    padding: 0 0 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    transition: color .3s, border-color .3s;
+  }
+  #page-contact .member-access-link::after,
+  #page-contact .portal-link::after {
+    content: '→';
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    letter-spacing: 0;
+    transition: transform .3s;
+  }
+  #page-contact .member-access-link:hover,
+  #page-contact .portal-link:hover { color: var(--brass); }
+  #page-contact .member-access-link:hover::after,
+  #page-contact .portal-link:hover::after { transform: translateX(6px); }
+
+  #page-contact .place-card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(181,148,90,0.22);
+    padding: 2.4rem 2rem 2.2rem;
+    margin-bottom: 1.4rem;
+  }
+  #page-contact .place-card-pin {
+    width: 24px; height: 24px;
+    margin: 0 0 0.9rem;
+    stroke: var(--brass);
+    opacity: 0.9;
+  }
+  #page-contact .place-card-name {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 48;
+    font-style: italic;
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--vellum);
+    line-height: 1.1;
+  }
+  #page-contact .place-card-addr {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(237,228,211,0.55);
+    margin-top: 0.4rem;
+  }
+  #page-contact .place-card-dir {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: rgba(237,228,211,0.55);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dotted rgba(181,148,90,0.28);
+    line-height: 1.5;
+  }
+
+  #page-contact .resources-panel {
+    background: transparent;
+    border: 1px solid rgba(181,148,90,0.22);
+    padding: 1.8rem 2rem 1.6rem;
+  }
+  #page-contact .resources-panel h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin: 0 0 1.2rem;
+    border: none;
+    padding: 0;
+    font-style: normal;
+  }
+  #page-contact .resources-panel a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.7rem 0;
+    border-bottom: 1px dotted rgba(181,148,90,0.2);
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 18, 'SOFT' 50;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--vellum);
+    text-decoration: none;
+    transition: color .3s;
+    letter-spacing: 0.005em;
+  }
+  #page-contact .resources-panel a:last-child { border-bottom: none; }
+  #page-contact .resources-panel a::after {
+    content: '↗';
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--brass);
+    font-size: 0.85rem;
+    transition: transform .3s;
+  }
+  #page-contact .resources-panel a:hover { color: var(--brass); }
+  #page-contact .resources-panel a:hover::after { transform: translate(3px, -3px); }
+
+  /* ═══════════ MEMBERS PORTAL ═══════════ */
+  #page-members .portal-header {
+    background: linear-gradient(180deg, var(--navy-mid) 0%, var(--navy) 100%);
+    border-bottom: 1px solid rgba(181,148,90,0.25);
+    padding: 2.4rem 2rem 2rem;
+    display: block;
+    position: relative;
+  }
+  #page-members .portal-header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 2rem;
+  }
+  #page-members .portal-eyebrow {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  #page-members .portal-eyebrow::before {
+    content: '';
+    width: 38px; height: 1px;
+    background: var(--brass);
+  }
+  #page-members .portal-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 96, 'SOFT' 80;
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-weight: 300;
+    color: var(--vellum);
+    letter-spacing: -0.01em;
+    text-transform: none;
+    line-height: 1;
+    margin: 0;
+  }
+  #page-members .portal-title em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--brass);
+    font-weight: 300;
+  }
+  #page-members .portal-logout {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--vellum);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--brass);
+    padding: 0 0 4px;
+    cursor: pointer;
+    transition: color .3s;
+    align-self: end;
+    margin-bottom: 4px;
+  }
+  #page-members .portal-logout:hover { color: var(--brass); }
+
+  #page-members .portal-tabs {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    border-bottom: 1px solid rgba(181,148,90,0.22);
+  }
+  #page-members .portal-tab {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(237,228,211,0.5);
+    padding: 1.3rem 0;
+    margin-right: 2.2rem;
+    border-bottom: 2px solid transparent;
+    transition: color .3s, border-color .3s;
+  }
+  #page-members .portal-tab:hover { color: var(--vellum); }
+  #page-members .portal-tab.active {
+    color: var(--vellum);
+    border-bottom-color: var(--brass);
+  }
+
+  #page-members .portal-content { max-width: 1120px; padding: 3rem 2rem 4rem; }
+
+  /* amenities header specifically gets a bit more breathing room */
+  @media (max-width: 700px) {
+    #page-contact .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    #page-contact .contact-item { grid-template-columns: 1fr; row-gap: 4px; }
+    #page-members .portal-header-inner { grid-template-columns: 1fr; }
+    #page-members .portal-logout { justify-self: start; margin-top: 1rem; }
+  }
+
+  /* ═══════════ NAV · editorial refresh ═══════════ */
+  nav {
+    background: rgba(7, 13, 18, 0.88);
+    border-bottom: 1px solid rgba(181, 148, 90, 0.2);
+    height: 74px;
+    padding: 0 2.2rem;
+  }
+
+  .nav-brand { gap: 1rem; }
+  .nav-logo { display: none; }
+
+  .nav-monogram {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--brass);
+    padding-right: 0.9rem;
+    border-right: 1px solid rgba(181, 148, 90, 0.45);
+    margin-right: 0.3rem;
+  }
+
+  .nav-title-main {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 36, 'SOFT' 70;
+    font-style: italic;
+    font-size: 1.05rem;
+    font-weight: 300;
+    letter-spacing: 0.003em;
+    color: var(--vellum);
+    text-transform: none;
+  }
+
+  .nav-title-sub {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(181, 148, 90, 0.85);
+    margin-top: 4px;
+  }
+
+  .nav-links { gap: 2.4rem; }
+  .nav-links a {
+    font-size: 0.64rem;
+    letter-spacing: 0.32em;
+    color: rgba(237, 228, 211, 0.55);
+    padding-bottom: 5px;
+    border-bottom: 1px solid transparent;
+    transition: color .3s, border-color .3s;
+  }
+  .nav-links a:hover { color: var(--vellum); }
+  .nav-links a.active {
+    color: var(--vellum);
+    border-bottom-color: var(--brass);
+  }
+
+  .nav-member-btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--vellum);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--brass);
+    padding: 0 0 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    transition: color .3s, border-color .3s;
+  }
+  .nav-member-btn::after {
+    content: '→';
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1rem;
+    letter-spacing: 0;
+    transition: transform .3s;
+  }
+  .nav-member-btn:hover { background: none; color: var(--brass); }
+  .nav-member-btn:hover::after { transform: translateX(6px); }
+
+  /* ═══════════ FOOTER · editorial refresh ═══════════ */
+  footer {
+    background: var(--ink-deep);
+    border-top: 1px solid rgba(181, 148, 90, 0.22);
+    padding: 3.6rem 2rem 3.2rem;
+    position: relative;
+  }
+  footer::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: var(--brass);
+    opacity: 0.8;
+  }
+
+  .footer-logo { display: none; }
+
+  .footer-name {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 60, 'SOFT' 70;
+    font-style: italic;
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--vellum);
+    letter-spacing: -0.003em;
+    text-transform: none;
+    margin-bottom: 0.9rem;
+  }
+  .footer-name em {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--brass);
+    font-style: italic;
+  }
+
+  .footer-sub {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.45);
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .footer-sub::before, .footer-sub::after {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: rgba(181, 148, 90, 0.45);
+  }
+
+  .footer-cms-link {
+    position: absolute;
+    right: 1.8rem;
+    bottom: 1.2rem;
+    margin: 0;
+    display: inline-block;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.52rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.12);
+    background: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0 0 3px;
+    cursor: pointer;
+    transition: color .3s, border-color .3s;
+  }
+  .footer-cms-link:hover {
+    color: rgba(237, 228, 211, 0.45);
+    border-bottom-color: rgba(181, 148, 90, 0.35);
+  }
+
+  @media (max-width: 720px) {
+    nav { padding: 0 1.2rem; }
+    .nav-monogram { display: none; }
+    .nav-title-main { font-size: 0.95rem; }
+  }
 </style>
 </head>
 <body>
@@ -1642,15 +2661,10 @@
 <!-- ═══════════════════════ NAV ═══════════════════════ -->
 <nav>
   <a class="nav-brand" onclick="showPage('home')">
-    <div class="nav-logo">
-      <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2.5"/>
-        <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
-      </svg>
-    </div>
+    <span class="nav-monogram">SVR</span>
     <div class="nav-title">
       <span class="nav-title-main">Spruce Valley Ranch</span>
-      <span class="nav-title-sub">Blue River, Colorado</span>
+      <span class="nav-title-sub">Blue River · Colorado</span>
     </div>
   </a>
   <ul class="nav-links">
@@ -1658,7 +2672,7 @@
     <li><a href="#" onclick="showPage('amenities')" id="nav-amenities">Amenities</a></li>
     <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a></li>
   </ul>
-  <button class="nav-member-btn" onclick="openPortal()">Homeowner Login</button>
+  <button class="nav-member-btn" onclick="openPortal()">Homeowner portal</button>
 </nav>
 
 <!-- ═══════════════════════ LOGIN OVERLAY ═══════════════════════ -->
@@ -1751,22 +2765,36 @@
   <div class="hero">
     <div class="hero-photo"></div>
     <div class="hero-overlay"></div>
-    <div class="hero-bg"></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">Indiana Creek Valley · Summit County</div>
-      <div class="hero-logo-large">
-        <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2"/>
-          <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
-        </svg>
+      <div class="hero-masthead">
+        <div class="hero-dateline">
+          <span>Blue River · Colorado</span>
+        </div>
+        <h1 class="hero-title">
+          Spruce Valley
+          <em>Ranch.</em>
+        </h1>
+        <p class="hero-sub" id="sc-hero-sub">48 custom homesites on 250 acres adjacent to Goose Pasture Tarn, with views of the Ten Mile Range.</p>
       </div>
-      <h1 class="hero-title">Spruce Valley <span>Ranch</span></h1>
-      <p class="hero-sub" id="sc-hero-sub">A private mountain enclave, Blue River, Colorado</p>
-      <div class="hero-divider"></div>
-      <a class="hero-cta" onclick="showPage('amenities')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        Explore the Ranch
-      </a>
+
+      <aside class="hero-stamp" aria-label="At a glance">
+        <div class="hero-stamp-key">Founded</div>
+        <div class="hero-stamp-value">1977</div>
+
+        <div class="hero-stamp-key">Area</div>
+        <div class="hero-stamp-value">48 lots · 250 acres</div>
+
+        <div class="hero-stamp-key">Location</div>
+        <div class="hero-stamp-value">39° 28′ N · 106° 02′ W</div>
+
+        <div class="hero-stamp-key">Elevation</div>
+        <div class="hero-stamp-value">9,460 ft.</div>
+      </aside>
+
+      <div class="hero-footline">
+        <a class="hero-link" onclick="showPage('amenities')">Explore the ranch</a>
+        <div class="hero-folio">Blue River, Colorado · Est. 1977</div>
+      </div>
     </div>
   </div>
 
@@ -1774,57 +2802,49 @@
   <div class="announcement-section" id="announcementSection">
     <div class="announcement-inner">
       <div class="announcement-label">News</div>
+
       <div class="announcement-items" id="announcementList">
         <!-- populated by JS -->
       </div>
     </div>
   </div>
 
-  <!-- ABOUT STRIP -->
-  <section style="background: var(--navy-mid); border-bottom: 1px solid var(--navy-border);">
-    <div class="section-inner" style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;">
+  <!-- ABOUT -->
+  <section class="home-colophon">
+    <div class="home-colophon-inner">
       <div>
-        <div class="section-label">Established 1977</div>
-        <h2 class="section-title">A Premier Colorado Mountain Community</h2>
-        <div class="section-rule"></div>
-        <p id="sc-about-body" style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:300; line-height:1.8; color:var(--text-muted); font-style:italic;">
-          Set on 250 acres of pristine mountain environment adjacent to Goose Pasture Tarn, Spruce Valley Ranch is the premiere private residential community in Summit County — just minutes from Breckenridge with views of the Ten Mile Range.
-        </p>
-        <p id="sc-about-body2" style="font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:300; line-height:1.8; color:var(--text-muted); font-style:italic; margin-top:1.2rem;">
-          Comprised of 48 custom lots ranging from 2 to 5.7 acres, SVR offers unmatched exclusivity alongside a remarkable collection of private amenities for homeowners and their guests.
-        </p>
+        <div class="colophon-header"><span>About Spruce Valley</span><span>Est. 1977</span></div>
+        <h2 class="colophon-title">A private community<br>in <em>Blue River, Colorado.</em></h2>
+        <p class="colophon-lede" id="sc-about-body">Spruce Valley Ranch is a private residential community on 250 acres adjacent to Goose Pasture Tarn in Summit County, Colorado — a short drive from Breckenridge, with views of the Ten Mile Range.</p>
+        <p class="colophon-body" id="sc-about-body2">48 custom lots, each between 2 and 5.7 acres, make up the community. The Ranch is member-governed, with a collection of private amenities reserved for homeowners and their guests.</p>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--navy-border);">
-        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
-          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">48</div>
-          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Private Lots</div>
+
+      <aside class="register" aria-label="At a glance">
+        <div class="register-header">At a glance</div>
+        <div class="register-row">
+          <div class="register-key">Location</div>
+          <div class="register-value">Blue River, <em>Colorado</em><small>Summit County · Indiana Creek Valley</small></div>
         </div>
-        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
-          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">250+</div>
-          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Acres</div>
+        <div class="register-row">
+          <div class="register-key">Elevation</div>
+          <div class="register-value">9,460 <em>ft.</em><small>Tarn 9,460 · Ridge 11,200</small></div>
         </div>
-        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
-          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">1977</div>
-          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Established</div>
+        <div class="register-row">
+          <div class="register-key">Area</div>
+          <div class="register-value">48 <em>lots</em><small>2.0 – 5.7 acres · 250 total</small></div>
         </div>
-        <div style="background:var(--navy); padding:1.5rem; text-align:center;">
-          <div style="font-family:'Cinzel',serif; font-size:2rem; color:var(--gold); margin-bottom:0.3rem;">2 mi</div>
-          <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">From Breck</div>
+        <div class="register-row">
+          <div class="register-key">Founded</div>
+          <div class="register-value">1977<small>Member-governed</small></div>
         </div>
-      </div>
+      </aside>
     </div>
   </section>
 
   <footer>
-    <div class="footer-logo">
-      <svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="45" cy="28" rx="43" ry="26" stroke="#c9a84c" stroke-width="2"/>
-        <text x="45" y="38" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">SVR</text>
-      </svg>
-    </div>
-    <div class="footer-name">Spruce Valley Ranch HOA</div>
+    <div class="footer-name">Spruce Valley Ranch <em>HOA</em></div>
     <div class="footer-sub">Blue River, Colorado · Indiana Creek Valley</div>
-    <button class="footer-cms-link" onclick="showCMS()">⚙ Site Admin</button>
+    <button class="footer-cms-link" onclick="showCMS()">Site admin</button>
   </footer>
 </div>
 
@@ -1832,10 +2852,9 @@
 <div class="page" id="page-amenities">
   <section style="padding-bottom:1.8rem;">
     <div class="section-inner">
-      <div class="section-label">Community Amenities</div>
-      <h2 class="section-title">Life at Spruce Valley Ranch</h2>
-      <div class="section-rule"></div>
-      <p class="section-intro" style="margin-bottom:0;">Exclusive amenities for SVR homeowners and their guests — all within the private boundaries of the ranch.</p>
+      <div class="section-label">Spruce Valley Ranch · Private</div>
+      <h2 class="section-title">World-class <em>amenities.</em></h2>
+      <p class="section-intro" style="margin-bottom:0;">Reserved for homeowners and their guests — all within the boundaries of the ranch.</p>
     </div>
   </section>
   <div class="amenity-strip-wrap">
@@ -1854,9 +2873,9 @@
     </div>
   </div>
   <footer>
-    <div class="footer-name">Spruce Valley Ranch HOA</div>
+    <div class="footer-name">Spruce Valley Ranch <em>HOA</em></div>
     <div class="footer-sub">Blue River, Colorado · Indiana Creek Valley</div>
-    <button class="footer-cms-link" onclick="showCMS()">⚙ Site Admin</button>
+    <button class="footer-cms-link" onclick="showCMS()">Site admin</button>
   </footer>
 </div>
 
@@ -1864,13 +2883,13 @@
 <div class="page" id="page-contact">
   <section>
     <div class="section-inner">
-      <div class="section-label">Contact & Board</div>
-      <h2 class="section-title">Get in Touch</h2>
-      <div class="section-rule"></div>
+      <div class="section-label">Board &amp; Administration</div>
+      <h2 class="section-title">Get in <em>touch.</em></h2>
+      <p class="section-intro">For homeowner inquiries, board matters, and community questions.</p>
       <div class="contact-grid">
         <div>
           <div class="contact-block">
-            <h3>HOA Administration</h3>
+            <h3>HOA administration</h3>
             <div class="contact-item">
               <div class="contact-item-label">Email</div>
               <div class="contact-item-value"><a id="contactEmail" href="/cdn-cgi/l/email-protection#f1a2a7a3939e908395b1969c90989ddf929e9c"><span class="__cf_email__" data-cfemail="9fccc9cdfdf0feedfbdff8f2fef6f3b1fcf0f2">[email&#160;protected]</span></a></div>
@@ -1881,62 +2900,64 @@
             </div>
             <div class="contact-item">
               <div class="contact-item-label">Location</div>
-              <div class="contact-item-value">Blue River, Colorado 80424<br><span style="font-size:0.78rem; color:var(--text-muted);">Off Wagon Road, south of Breckenridge</span></div>
+              <div class="contact-item-value">Blue River, Colorado 80424<small>Off Wagon Road, south of Breckenridge</small></div>
             </div>
           </div>
           <div class="contact-block mt2">
-            <h3>Board of Directors</h3>
+            <h3>Board of directors</h3>
             <div id="boardList">
               <!-- populated by JS -->
             </div>
           </div>
           <div class="contact-block mt2">
-            <h3>Member Access</h3>
-            <p style="font-size:0.83rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
-              HOA documents, the community directory, newsletters, and financial records are available to homeowners through the Homeowners Portal. Contact the HOA administrator to receive your login credentials.
-            </p>
-            <button class="hero-cta" onclick="openPortal()" style="font-size:0.65rem;">Access Homeowners Portal</button>
+            <h3>Member access</h3>
+            <p class="member-access-body">HOA documents, the community directory, newsletters, and financial records are available to homeowners through the Homeowners Portal. Contact the HOA administrator for your login.</p>
+            <button class="member-access-link" onclick="openPortal()">Open the portal</button>
           </div>
         </div>
         <div>
-          <div class="contact-map-placeholder" style="margin-bottom:1.5rem;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" style="margin:0 auto 1rem; display:block;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <p style="color:var(--text-muted); font-size:0.82rem;">Spruce Valley Ranch<br>Blue River, CO 80424</p>
-            <p style="margin-top:0.8rem; font-size:0.72rem; color:var(--navy-border);">From Hwy 9 south of Breckenridge,<br>turn left on Wagon Road</p>
+          <div class="place-card">
+            <svg class="place-card-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div class="place-card-name">Spruce Valley Ranch</div>
+            <div class="place-card-addr">Blue River, CO 80424</div>
+            <div class="place-card-dir">From Hwy 9 south of Breckenridge, turn left on Wagon Road.</div>
           </div>
-          <div style="background:var(--navy-mid); border:1px solid var(--navy-border); padding:2rem;">
-            <h3 style="font-family:'Cinzel',serif; font-size:0.85rem; color:var(--cream); letter-spacing:0.1em; margin-bottom:1rem;">Community Resources</h3>
-            <div style="display:flex; flex-direction:column; gap:0.5rem;">
-              <a href="https://townofblueriver.colorado.gov" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Town of Blue River →</a>
-              <a href="https://www.breckenridge.com" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Town of Breckenridge →</a>
-              <a href="https://www.summitcountyco.gov" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Summit County Government →</a>
-              <a href="https://www.rbfire.org" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Red, White & Blue Fire District →</a>
-              <a href="https://www.summitdaily.com" target="_blank" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">Summit Daily News →</a>
-            </div>
+          <div class="resources-panel">
+            <h3>Community resources</h3>
+            <a href="https://townofblueriver.colorado.gov" target="_blank" rel="noopener">Town of Blue River</a>
+            <a href="https://www.breckenridge.com" target="_blank" rel="noopener">Town of Breckenridge</a>
+            <a href="https://www.summitcountyco.gov" target="_blank" rel="noopener">Summit County Government</a>
+            <a href="https://www.rbfire.org" target="_blank" rel="noopener">Red, White &amp; Blue Fire District</a>
+            <a href="https://www.summitdaily.com" target="_blank" rel="noopener">Summit Daily News</a>
           </div>
         </div>
       </div>
     </div>
   </section>
   <footer>
-    <div class="footer-name">Spruce Valley Ranch HOA</div>
+    <div class="footer-name">Spruce Valley Ranch <em>HOA</em></div>
     <div class="footer-sub">Blue River, Colorado · Indiana Creek Valley</div>
-    <button class="footer-cms-link" onclick="showCMS()">⚙ Site Admin</button>
+    <button class="footer-cms-link" onclick="showCMS()">Site admin</button>
   </footer>
 </div>
 
 <!-- ═══════════════════════ PAGE: MEMBERS PORTAL ═══════════════════════ -->
 <div class="page" id="page-members">
   <div class="portal-header">
-    <div class="portal-title">Homeowners Portal — Spruce Valley Ranch</div>
-    <button class="portal-logout" onclick="doLogout()">Sign Out</button>
+    <div class="portal-header-inner">
+      <div>
+        <div class="portal-eyebrow">Spruce Valley Ranch · Homeowners</div>
+        <div class="portal-title">The <em>Portal.</em></div>
+      </div>
+      <button class="portal-logout" onclick="doLogout()">Sign out</button>
+    </div>
   </div>
   <div class="portal-tabs">
-    <button class="portal-tab active" onclick="showPortalTab('docs')">HOA Documents</button>
-    <button class="portal-tab" onclick="showPortalTab('directory')">Community Directory</button>
+    <button class="portal-tab active" onclick="showPortalTab('docs')">Documents</button>
+    <button class="portal-tab" onclick="showPortalTab('directory')">Directory</button>
     <button class="portal-tab" onclick="showPortalTab('newsletters')">Newsletters</button>
-    <button class="portal-tab" onclick="showPortalTab('financials')">Minutes & Financials</button>
-    <button class="portal-tab" onclick="showPortalTab('range')">Trap &amp; Skeet Scheduling</button>
+    <button class="portal-tab" onclick="showPortalTab('financials')">Minutes &amp; Financials</button>
+    <button class="portal-tab" onclick="showPortalTab('range')">Trap &amp; Skeet</button>
   </div>
   <div class="portal-content">
 
@@ -2041,17 +3062,17 @@
       <div id="cms-site-content-list">
         <div class="cms-item-row" id="sc-row-hero-sub" style="flex-direction:column;align-items:flex-start;gap:0.5rem;">
           <label class="cms-label">Hero Subtitle</label>
-          <input type="text" class="cms-input" id="sc-input-hero-sub" value="A private mountain enclave, Blue River, Colorado">
+          <input type="text" class="cms-input" id="sc-input-hero-sub" value="48 custom homesites on 250 acres adjacent to Goose Pasture Tarn, with views of the Ten Mile Range.">
           <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('hero-sub','sc-input-hero-sub')">Save</button></div>
         </div>
         <div class="cms-item-row" id="sc-row-about-body" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
           <label class="cms-label">About — Main Paragraph</label>
-          <textarea class="cms-textarea" id="sc-input-about-body" style="min-height:80px;">Set on 250 acres of pristine mountain environment adjacent to Goose Pasture Tarn, Spruce Valley Ranch is the premiere private residential community in Summit County — just minutes from Breckenridge with views of the Ten Mile Range.</textarea>
+          <textarea class="cms-textarea" id="sc-input-about-body" style="min-height:80px;">Spruce Valley Ranch is a private residential community on 250 acres adjacent to Goose Pasture Tarn in Summit County, Colorado — a short drive from Breckenridge, with views of the Ten Mile Range.</textarea>
           <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body','sc-input-about-body')">Save</button></div>
         </div>
         <div class="cms-item-row" id="sc-row-about-body2" style="flex-direction:column;align-items:flex-start;gap:0.5rem;margin-top:0.75rem;">
           <label class="cms-label">About — Secondary Paragraph</label>
-          <textarea class="cms-textarea" id="sc-input-about-body2" style="min-height:70px;">Comprised of 48 custom lots ranging from 2 to 5.7 acres, SVR offers unmatched exclusivity alongside a remarkable collection of private amenities for homeowners and their guests.</textarea>
+          <textarea class="cms-textarea" id="sc-input-about-body2" style="min-height:70px;">48 custom lots, each between 2 and 5.7 acres, make up the community. The Ranch is member-governed, with a collection of private amenities reserved for homeowners and their guests.</textarea>
           <div class="cms-actions"><button class="cms-btn cms-btn-secondary" onclick="saveSiteContentField('about-body2','sc-input-about-body2')">Save</button></div>
         </div>
       </div>
@@ -2274,11 +3295,11 @@ const DEFAULT_DATA = {
   amenities: [
     { id: 1, name: 'Goose Pasture Tarn', desc: 'Private lake access for Blue River residents — fishing, kayaking, canoeing, and paddleboarding amid spectacular mountain scenery.' },
     { id: 2, name: 'Private Boathouse', desc: 'Exclusive SVR boathouse on the Tarn for storage of canoes and kayaks for homeowners and guests.' },
-    { id: 3, name: 'Stables & Trails', desc: 'A 10-stall stable for summer horse boarding, plus miles of multi-use trails through the ranch and into US Forest Service land.' },
-    { id: 4, name: 'Tennis Courts', desc: 'Regulation-size tennis and basketball courts available exclusively to Spruce Valley Ranch residents.' },
+    { id: 3, name: 'Horse Stables & Trails', desc: 'A 10-stall stable for summer horse boarding, plus miles of multi-use trails through the ranch and into US Forest Service land.' },
     { id: 5, name: 'Trap & Skeet Range', desc: 'Private trap and skeet shooting range for the exclusive use of SVR homeowners and invited guests.' },
+    { id: 7, name: 'XC Ski Trails', desc: 'Groomed cross-country ski and snowshoe trails through the ranch and into the National Forest each winter season.' },
     { id: 6, name: 'Picnic Area', desc: 'Beautiful community picnic and barbecue grounds along Indiana Creek — perfect for gatherings and community events.' },
-    { id: 7, name: 'XC Ski Trails', desc: 'Groomed cross-country ski and snowshoe trails through the ranch and into the National Forest each winter season.' }
+    { id: 4, name: 'Tennis Courts', desc: 'Regulation-size tennis and basketball courts available exclusively to Spruce Valley Ranch residents.' }
   ],
   board: [
     { id: 1, name: 'Paul Pittman', role: 'President' },
