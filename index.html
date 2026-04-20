@@ -3562,6 +3562,51 @@ async function doUpdatePassword() {
   }
 }
 
+// PKCE-style recovery/invite flow: email link lands here with ?token_hash=…&type=…
+// and the verify call only fires on real user click, so pre-click email scanners
+// don't consume the one-time token.
+async function checkRecoveryToken() {
+  const url = new URL(window.location.href);
+  const tokenHash = url.searchParams.get('token_hash');
+  const type = url.searchParams.get('type');
+  if (!tokenHash || (type !== 'recovery' && type !== 'invite')) return;
+
+  url.searchParams.delete('token_hash');
+  url.searchParams.delete('type');
+  window.history.replaceState({}, '', url.toString());
+
+  if (!siteData.supabaseUrl || !siteData.supabaseKey) return;
+
+  let res, data;
+  try {
+    res = await fetch(sbAuthUrl('verify'), {
+      method: 'POST',
+      headers: sbAnonHeaders(),
+      body: JSON.stringify({ type, token_hash: tokenHash })
+    });
+    data = await res.json();
+  } catch (e) {
+    res = { ok: false }; data = {};
+  }
+
+  if (!res.ok || !data.access_token) {
+    document.getElementById('loginOverlay').classList.add('active');
+    showLoginForgot();
+    const err = document.getElementById('forgotError');
+    err.textContent = 'That reset link is invalid or has expired. Enter your email to get a new one.';
+    err.style.display = 'block';
+    return;
+  }
+
+  recoveryToken = data.access_token;
+  document.getElementById('newPasswordInput').value = '';
+  document.getElementById('confirmPasswordInput').value = '';
+  document.getElementById('updatePasswordError').style.display = 'none';
+  document.getElementById('updatePasswordOverlay').classList.add('active');
+}
+
+// Legacy implicit-grant flow (access_token in URL hash). Kept as a fallback so
+// reset/invite emails already in inboxes continue to work during the transition.
 function checkRecoveryHash() {
   const hash = window.location.hash.slice(1);
   if (!hash) return;
@@ -5336,7 +5381,8 @@ document.addEventListener('DOMContentLoaded', () => {
     isLoggedIn = true;
     updateLoginBtn();
   }
-  // Handle recovery link in URL hash
+  // Handle recovery link: new PKCE ?token_hash= flow first, legacy #access_token fallback
+  checkRecoveryToken();
   checkRecoveryHash();
   // Handle cancel-reservation link (?cancel=<id>)
   checkCancelParam();
